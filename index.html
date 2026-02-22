@@ -1,68 +1,106 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Morningstar</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Morningstar</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- ================= TELA INICIAL ================= -->
-<div id="welcomeScreen" class="overlay-screen">
-    <div class="welcome-container">
-        <h1>Bem-vindo jogador</h1>
-        <h3>Você foi escolhido pelo arquiteto Morningstar à mudar sua própria vida</h3>
-        <button id="startLogoBtn">👑</button>
-    </div>
+<div id="welcomeScreen" class="screen flex-center">
+  <h1 class="logo">Morningstar</h1>
+  <p class="welcome-text">Você foi escolhido pelo arquiteto Morningstar a mudar sua própria vida</p>
+  <button id="startLogoBtn" class="logo-btn">👑</button>
 </div>
 
 <!-- ================= TELA NOME/GÊNERO ================= -->
-<div id="nameGenderScreen" class="overlay-screen" style="display:none;">
-    <div class="welcome-container">
-        <h2>Escolha seu nome e gênero</h2>
-        <input type="text" id="playerName" placeholder="Digite seu nome">
-        <select id="playerGender">
-            <option value="male">Homem</option>
-            <option value="female">Mulher</option>
-            <option value="none">Prefiro não responder</option>
-        </select>
-        <button id="startGameBtn">Continuar</button>
-    </div>
+<div id="nameGenderScreen" class="screen flex-center" style="display:none;">
+  <h2>Bem-vindo jogador!</h2>
+  <input type="text" id="playerName" placeholder="Digite seu nome">
+  <select id="playerGender">
+    <option value="male">Homem</option>
+    <option value="female">Mulher</option>
+    <option value="none">Prefiro não responder</option>
+  </select>
+  <button id="startGameBtn">Continuar</button>
 </div>
 
-<!-- ================= POP-UP VINCULAR CONTA ================= -->
-<div id="accountPopup" class="overlay-screen" style="display:none;">
-    <div class="welcome-container">
-        <h2>Vincular Conta</h2>
-        <p>Deseja vincular sua conta para salvar o progresso?</p>
-        <button id="linkAccountBtn">Vincular Conta</button>
-        <button id="guestBtn">Navegar sem conta</button>
-    </div>
+<!-- ================= POP-UP CONTA ================= -->
+<div id="accountPopup" class="screen flex-center" style="display:none;">
+  <p>Vincule sua conta para salvar o progresso</p>
+  <button id="linkAccountBtn">🔗 Vincular Conta</button>
+  <button id="guestBtn">🎮 Jogar como visitante</button>
 </div>
 
-<!-- ================= POP-UP AVISO GUEST ================= -->
-<div id="guestWarningPopup" class="overlay-screen" style="display:none;">
-    <div class="welcome-container">
-        <h2>Atenção</h2>
-        <p>Se você não vincular uma conta, o progresso **não será salvo**.</p>
-        <button id="guestContinueBtn">Continuar como visitante</button>
-    </div>
+<!-- ================= AVISO VISITANTE ================= -->
+<div id="guestWarningPopup" class="screen flex-center" style="display:none;">
+  <p>Atenção: Jogando como visitante, seu progresso **não será salvo**.</p>
+  <button id="guestContinueBtn">Continuar como visitante</button>
 </div>
 
-<!-- ================= TELA VINCULAR CONTA (Admin) ================= -->
-<div id="linkAccountScreen" class="overlay-screen" style="display:none;">
-    <div class="welcome-container">
-        <h2>Vincular Conta</h2>
-        <input type="email" id="emailInput" placeholder="Digite seu email">
-        <button id="emailSubmitBtn">Continuar</button>
+<!-- ================= VINCULAR CONTA ================= -->
+<div id="linkAccountScreen" class="screen flex-center" style="display:none;">
+  <p>Digite sua conta ou palavra-chave secreta:</p>
+  <input type="text" id="emailInput" placeholder="Email ou palavra-chave secreta">
+  <button id="emailSubmitBtn">Enviar</button>
 
-        <div id="adminAuthDiv" style="display:none; flex-direction:column; margin-top:10px;">
-            <input type="text" id="adminKey" placeholder="Digite a palavra-chave">
-            <input type="password" id="adminPassword" placeholder="Digite a senha de administrador">
-            <button id="adminSubmitBtn">Confirmar</button>
-        </div>
+  <!-- ================= MODO ARQUITETO ================= -->
+  <div id="adminAuthDiv" style="display:none;">
+    <p>Senha do Arquiteto:</p>
+    <input type="password" id="adminPassword" placeholder="Senha secreta">
+    <button id="adminSubmitBtn">Entrar</button>
+  </div>
+</div>
+
+<!-- ================= TELA PRINCIPAL DO JOGO ================= -->
+<div id="gameScreen" class="screen flex-center" style="display:none;">
+  <div class="game-container">
+
+    <div class="header">
+      <button id="menuBtn" class="menu-logo">👑</button>
+      <div class="theme-toggle">
+        <span id="lightModeBtn">🌞</span>
+        <span id="darkModeBtn">🌙</span>
+      </div>
     </div>
+
+    <h1 id="playerTitle">SISTEMA SOLDADO</h1>
+
+    <div class="status">
+      <p>Patente: <span id="rank">Soldado</span></p>
+      <p>Nível: <span id="level">1</span></p>
+      <p>XP: <span id="xp">0</span> / <span id="xpNext">100</span></p>
+
+      <div class="xp-bar">
+        <div class="xp-fill" id="xpFill"></div>
+      </div>
+    </div>
+
+    <div class="missions">
+      <button onclick="addXP(25)">📚 Estudo Profundo (+25XP)</button>
+      <button onclick="addXP(15)">📖 Leitura Estratégica (+15XP)</button>
+      <button onclick="addXP(30)">🧠 Produção Intelectual (+30XP)</button>
+      <button onclick="addXP(10)">💪 Treino 1h (+10XP)</button>
+    </div>
+
+    <div class="message" id="message"></div>
+
+    <!-- ================= MENU LATERAL ================= -->
+    <div id="menu" class="menu-dropdown">
+      <button onclick="vincularConta()">🔗 Vincular Conta</button>
+      <button onclick="verProgresso()">📊 Progresso</button>
+      <button onclick="configuracoes()">⚙️ Configurações</button>
+      <button onclick="idioma()">🌐 Idioma</button>
+    </div>
+
+    <!-- ================= CLÁUSULA DE RESPONSABILIDADE ================= -->
+    <div class="disclaimer">
+      <p>⚠️ Jogando este jogo, você concorda que todo o conteúdo é recreativo. O progresso e as punições propostas são fictícios e não somos responsáveis por qualquer consequência na vida real.</p>
+    </div>
+
+  </div>
 </div>
 
 <script src="script.js"></script>
