@@ -1,198 +1,34 @@
-/* =============================== */
-/* FASE NECROMANCER - STYLE.CSS    */
-/* =============================== */
+// Elementos
+const welcomeScreen = document.getElementById("welcomeScreen");
+const startLogoBtn = document.getElementById("startLogoBtn");
+const nameGenderScreen = document.getElementById("nameGenderScreen");
+const startGameBtn = document.getElementById("startGameBtn");
+const playerNameInput = document.getElementById("playerName");
+const playerGenderSelect = document.getElementById("playerGender");
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0a0a0f;
-  color: #d4af37;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
+// Clique na coroa → abre tela de nome/gênero
+startLogoBtn.addEventListener("click", () => {
+    welcomeScreen.style.display = "none";
+    nameGenderScreen.style.display = "flex";
+});
 
-/* =============================== */
-/* Overlay Screens (Boas-vindas / Progresso / Config) */
-.overlay-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #111118;
-  color: #d4af37;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  z-index: 999;
-  padding: 20px;
-  overflow-y: auto;
-}
+// Clique no botão Começar → salva nome/gênero e vai para próxima etapa
+startGameBtn.addEventListener("click", () => {
+    const name = playerNameInput.value.trim();
+    const gender = playerGenderSelect.value;
 
-.welcome-container, .content-container {
-  max-width: 500px;
-  width: 100%;
-  text-align: center;
-}
+    if(name === "") {
+        alert("Por favor, digite seu nome.");
+        return;
+    }
 
-h1, h2, h3 {
-  margin: 10px 0;
-}
+    // Salva nome e gênero no jogo (variáveis globais)
+    window.playerName = name;
+    window.playerGender = gender;
 
-input, select {
-  width: 80%;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 8px;
-  border: 1px solid #d4af37;
-  background: #1a1a22;
-  color: #d4af37;
-}
+    // Mensagem de teste
+    console.log("Jogador:", playerName, "Gênero:", playerGender);
 
-button {
-  background: #1a1a22;
-  border: 1px solid #d4af37;
-  color: #d4af37;
-  padding: 10px;
-  margin: 5px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  background: #d4af37;
-  color: #111118;
-}
-
-.theme-toggle {
-  margin-top: 15px;
-  font-size: 18px;
-}
-
-/* =============================== */
-/* Game Container */
-.game-container {
-  background: #111118;
-  padding: 30px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  text-align: center;
-  box-shadow: 0 0 25px rgba(128, 0, 255, 0.3);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.status p {
-  margin: 5px 0;
-}
-
-.xp-bar {
-  width: 100%;
-  height: 20px;
-  background: #1a1a22;
-  border-radius: 10px;
-  overflow: hidden;
-  margin: 10px 0 20px 0;
-}
-
-.xp-fill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #5f00ff, #a855f7);
-  transition: width 0.4s ease;
-}
-
-.message {
-  margin-top: 15px;
-  color: #a855f7;
-  font-weight: bold;
-}
-
-/* =============================== */
-/* Menu Dropdown */
-.menu-dropdown {
-  display: none;
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  background: #111118;
-  min-width: 150px;
-  border: 1px solid #d4af37;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(128,0,255,0.3);
-  z-index: 1000;
-  flex-direction: column;
-}
-
-.menu-dropdown button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  background: none;
-  color: #d4af37;
-  text-align: left;
-  cursor: pointer;
-}
-
-.menu-dropdown button:hover {
-  background: #d4af37;
-  color: #111118;
-}
-
-/* =============================== */
-/* Home Button */
-.homeBtn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: #1a1a22;
-  color: #d4af37;
-  border: 1px solid #d4af37;
-}
-
-/* =============================== */
-/* Crown Icon on Progress Screen */
-#crownIcon {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  transform: rotate(-15deg);
-  font-size: 28px;
-}
-
-/* =============================== */
-/* Configurations Panel */
-.settings-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-/* =============================== */
-/* Responsive - Mobile */
-@media (max-width: 600px) {
-  .game-container, .welcome-container, .content-container {
-    width: 95%;
-    padding: 20px;
-  }
-
-  #crownIcon {
-    font-size: 24px;
-  }
-
-  button, input, select {
-    width: 100%;
-  }
-}
+    // Aqui você pode abrir a próxima tela do jogo (XP, missões, etc.)
+    alert(`Bem-vindo, ${gender === "male" ? "Sr." : gender === "female" ? "Sra." : ""} ${playerName}!`);
+});
