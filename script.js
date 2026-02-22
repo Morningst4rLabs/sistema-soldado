@@ -1,3 +1,8 @@
+// ===============================
+// Sistema Soldado - Versão Avançada
+// ===============================
+
+// Variáveis principais
 let xp = 0;
 let level = 1;
 let xpNext = 100;
@@ -11,6 +16,9 @@ const levelText = document.getElementById("level");
 const rankText = document.getElementById("rank");
 const message = document.getElementById("message");
 
+// ===============================
+// Funções do jogo
+// ===============================
 function addXP(amount) {
     xp += amount;
     checkLevelUp();
@@ -50,23 +58,24 @@ function showMessage(text) {
     }, 3000);
 }
 
-// Inicializa a interface
-updateUI();
-// Menu de controle
+// ===============================
+// Menu de Controle - Botão Coroa
+// ===============================
 const menuBtn = document.getElementById("menuBtn");
 const menu = document.getElementById("menu");
 
+// Abrir / fechar menu
 menuBtn.addEventListener("click", () => {
     menu.style.display = menu.style.display === "block" ? "none" : "block";
 });
 
-// Funções básicas dos botões do menu
+// Funções dos botões do menu
 function vincularConta() {
     alert("🔗 Vincular conta ainda não implementado");
 }
 
 function verProgresso() {
-    alert("📊 Progresso: XP " + xp + " | Nível " + level + " | Patente " + rank);
+    alert("📊 Progresso:\nXP: " + xp + "\nNível: " + level + "\nPatente: " + rank);
 }
 
 function configuracoes() {
@@ -76,3 +85,8 @@ function configuracoes() {
 function idioma() {
     alert("🌐 Alterar idioma ainda não implementado");
 }
+
+// ===============================
+// Inicializa interface
+// ===============================
+updateUI();
