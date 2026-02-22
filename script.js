@@ -1,31 +1,23 @@
-/* Tela inicial overlay */
-.overlay-screen {
-    position: fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:#0a0a0f;
-    color:#d4af37;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    z-index:1000;
-    text-align:center;
-}
+const welcomeScreen = document.getElementById("welcomeScreen");
+const startLogoBtn = document.getElementById("startLogoBtn");
+const nameGenderScreen = document.getElementById("nameGenderScreen");
+const startGameBtn = document.getElementById("startGameBtn");
+const playerNameInput = document.getElementById("playerName");
+const playerGenderSelect = document.getElementById("playerGender");
 
-.welcome-container h1 {
-    font-size:2.5rem;
-    margin-bottom:10px;
-}
+startLogoBtn.addEventListener("click", () => {
+    welcomeScreen.style.display = "none";
+    nameGenderScreen.style.display = "flex";
+});
 
-.welcome-container h3 {
-    font-size:1.2rem;
-    margin-bottom:20px;
-}
-
-.welcome-container button:hover {
-    background:#d4af37;
-    color:#111118;
-}
+startGameBtn.addEventListener("click", () => {
+    const name = playerNameInput.value.trim();
+    const gender = playerGenderSelect.value;
+    if(name === "") {
+        alert("Por favor, digite seu nome.");
+        return;
+    }
+    window.playerName = name;
+    window.playerGender = gender;
+    alert(`Bem-vindo, ${gender==="male"?"Sr.":gender==="female"?"Sra.":""} ${name}!`);
+});
