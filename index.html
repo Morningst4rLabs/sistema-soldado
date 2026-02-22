@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema Soldado</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="game-container">
+    <h1>SISTEMA SOLDADO</h1>
+
+    <div class="status">
+      <p>Patente: <span id="rank">Soldado</span></p>
+      <p>Nível: <span id="level">1</span></p>
+      <p>XP: <span id="xp">0</span> / <span id="xpNext">100</span></p>
+
+      <div class="xp-bar">
+        <div class="xp-fill" id="xpFill"></div>
+      </div>
+    </div>
+
+    <div class="missions">
+      <button onclick="addXP(25)">📚 Estudo Profundo (+25XP)</button>
+      <button onclick="addXP(15)">📖 Leitura Estratégica (+15XP)</button>
+      <button onclick="addXP(30)">🧠 Produção Intelectual (+30XP)</button>
+      <button onclick="addXP(10)">💪 Treino 1h (+10XP)</button>
+    </div>
+
+    <div class="message" id="message"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
