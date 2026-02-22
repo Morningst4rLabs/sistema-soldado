@@ -1,102 +1,26 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Morningstar</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<!-- Tela de boas-vindas -->
+<!-- Tela Inicial - Boas-vindas -->
 <div id="welcomeScreen" class="overlay-screen">
-  <div class="welcome-container">
-    <h1>Bem-vindo, jogador</h1>
-    <h3>Você foi escolhido pelo arquiteto Morningstar a mudar sua própria vida</h3>
-    <label for="playerName">Digite seu nome:</label>
-    <input type="text" id="playerName" placeholder="Seu nome">
-    <label for="playerGender">Sexo:</label>
-    <select id="playerGender">
-      <option value="male">Homem</option>
-      <option value="female">Mulher</option>
-      <option value="none">Prefiro não responder</option>
-    </select>
-    <button id="startGameBtn">Iniciar</button>
-    <div class="theme-toggle">
-      🌞 <input type="checkbox" id="themeSwitch"> 🌙
+    <div class="welcome-container">
+        <h1>Bem-vindo jogador</h1>
+        <h3>Você foi escolhido pelo arquiteto Morningstar à mudar sua própria vida</h3>
+        <!-- Coroa clicável -->
+        <button id="startLogoBtn" style="font-size:50px; padding:20px;">👑</button>
     </div>
-  </div>
 </div>
 
-<!-- Tela principal do jogo -->
-<div class="game-container" id="mainGame" style="display:none;">
-  <div class="header">
-    <h1>Morningstar</h1>
-    <button id="menuBtn">👑</button>
-  </div>
-
-  <div class="status">
-    <p>Patente: <span id="rank">Soldado</span></p>
-    <p>Nível: <span id="level">1</span></p>
-    <p>XP: <span id="xp">0</span> / <span id="xpNext">100</span></p>
-    <div class="xp-bar">
-      <div class="xp-fill" id="xpFill"></div>
+<!-- Tela de Inserir Nome e Gênero -->
+<div id="nameGenderScreen" class="overlay-screen" style="display:none; flex-direction:column; align-items:center;">
+    <div class="welcome-container">
+        <h2>Escolha seu nome e gênero</h2>
+        <input type="text" id="playerName" placeholder="Digite seu nome" style="margin-bottom:10px; padding:8px; border-radius:5px; border:1px solid #d4af37;">
+        <select id="playerGender" style="margin-bottom:10px; padding:8px; border-radius:5px; border:1px solid #d4af37;">
+            <option value="male">Homem</option>
+            <option value="female">Mulher</option>
+            <option value="none">Prefiro não responder</option>
+        </select>
+        <button id="startGameBtn" style="padding:10px 20px; border-radius:8px; border:1px solid #d4af37; background:#1a1a22; color:#d4af37; cursor:pointer;">Começar</button>
     </div>
-  </div>
-
-  <div class="missions">
-    <button onclick="addXP(25)">📚 Estudo Profundo (+25XP)</button>
-    <button onclick="addXP(15)">📖 Leitura Estratégica (+15XP)</button>
-    <button onclick="addXP(30)">🧠 Produção Intelectual (+30XP)</button>
-    <button onclick="addXP(10)">💪 Treino 1h (+10XP)</button>
-  </div>
-
-  <div class="message" id="message"></div>
 </div>
-
-<!-- Menu lateral / telas secundárias -->
-<div id="menu" class="menu-dropdown">
-  <button onclick="showScreen('progressScreen')">📊 Progresso</button>
-  <button onclick="showScreen('configScreen')">⚙️ Configurações</button>
-  <button onclick="showScreen('linkAccountScreen')">🔗 Vincular Conta</button>
-</div>
-
-<!-- Tela Progresso -->
-<div id="progressScreen" class="overlay-screen" style="display:none;">
-  <button class="homeBtn" onclick="returnHome()">🏠</button>
-  <div class="content-container">
-    <button id="crownIcon">👑</button>
-    <h2>Progresso do jogador</h2>
-    <p>Nome: <span id="displayName"></span></p>
-    <p>Patente: <span id="displayRank"></span></p>
-    <p>Nível: <span id="displayLevel"></span></p>
-    <p>XP: <span id="displayXP"></span> / <span id="displayXPNext"></span></p>
-  </div>
-</div>
-
-<!-- Tela Configurações -->
-<div id="configScreen" class="overlay-screen" style="display:none;">
-  <button class="homeBtn" onclick="returnHome()">🏠</button>
-  <div class="content-container settings-container">
-    <h2>Configurações</h2>
-    <label for="themeSwitch2">Tema:</label>
-    🌞 <input type="checkbox" id="themeSwitch2"> 🌙
-    <label for="languageSelect">Idioma:</label>
-    <select id="languageSelect"></select>
-  </div>
-</div>
-
-<!-- Tela Vincular Conta -->
-<div id="linkAccountScreen" class="overlay-screen" style="display:none;">
-  <button class="homeBtn" onclick="returnHome()">🏠</button>
-  <div class="content-container">
-    <h2>Vincular Conta</h2>
-    <label for="emailInput">Email:</label>
-    <input type="email" id="emailInput">
-    <label for="adminPassword">Senha Administrativa:</label>
-    <input type="password" id="adminPassword">
-    <button onclick="checkAdmin()">Prosseguir</button>
-  </div>
 </div>
 
 <script src="script.js"></script>
