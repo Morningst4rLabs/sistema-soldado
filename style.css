@@ -59,7 +59,56 @@ button:hover {
   background: #d4af37;
   color: #111118;
 }
+/* Menu de três pontos */
+.menu-container {
+    position: relative;
+    display: inline-block;
+    margin-top: 15px;
+}
 
+#menuBtn {
+    background: #1a1a22;
+    border: 1px solid #d4af37;
+    color: #d4af37;
+    font-size: 20px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#menuBtn:hover {
+    background: #d4af37;
+    color: #111118;
+}
+
+.menu-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: #111118;
+    min-width: 150px;
+    border: 1px solid #d4af37;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(128,0,255,0.3);
+    z-index: 1;
+}
+
+.menu-dropdown button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: none;
+    color: #d4af37;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.menu-dropdown button:hover {
+    background: #d4af37;
+    color: #111118;
+}
 .message {
   margin-top: 15px;
   color: #a855f7;
