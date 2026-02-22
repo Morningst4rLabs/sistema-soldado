@@ -1,89 +1,211 @@
-/* ================= ESTILO BASE ================= */
-@import url('https://fonts.cdnfonts.com/css/algerian');
-@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap');
+/* ================= BODY & FONT ================= */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
 
 body {
-    margin:0;
-    font-family: 'Segoe UI', sans-serif;
-    background:#0a0a0f;
-    color:#d4af37;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    background: #0a0a0f; /* fundo escuro */
+    color: #d4af37; /* dourado */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-/* ================= TELAS OVERLAY ================= */
-.overlay-screen {
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(10,10,15,0.95);
-    color:#d4af37;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    text-align:center;
-    z-index:1000;
+/* ================= TELAS ================= */
+.screen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #0a0a0f;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-/* Container central */
-.welcome-container h1 {
-    font-family: 'Algerian', sans-serif;  /* Nome Morningstar */
-    font-size:2.5rem;
-    margin-bottom:10px;
+.flex-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.welcome-container h2 {
-    font-family: 'Algerian', sans-serif;  /* Subtítulos importantes */
-    font-size:2rem;
-    margin-bottom:10px;
+/* ================= LOGO / TELA INICIAL ================= */
+.logo {
+    font-family: 'Alegerian', serif;
+    font-size: 48px;
+    color: #d4af37;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
 }
 
-.welcome-container h3 {
-    font-family: 'Segoe UI', sans-serif;
-    font-size:1.2rem;
-    margin-bottom:20px;
+.logo-btn {
+    font-size: 50px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-.welcome-container input,
-.welcome-container select {
-    margin-bottom:10px;
-    padding:8px;
-    border-radius:5px;
-    border:1px solid #d4af37;
-    background:#111118;
-    color:#d4af37;
-    width:200px;
-    font-family: 'Segoe UI', sans-serif;
+.logo-btn:hover {
+    transform: scale(1.2);
 }
 
-.welcome-container button {
-    background:#1a1a22;
-    color:#d4af37;
-    border:1px solid #d4af37;
-    border-radius:8px;
-    cursor:pointer;
-    padding:10px 20px;
-    font-size:1.2rem;
-    font-family: 'Segoe UI', sans-serif;
-    transition:0.3s;
-    margin:5px;
+/* ================= INPUTS ================= */
+input[type="text"], input[type="password"], select {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #d4af37;
+    background: #111118;
+    color: #d4af37;
+    width: 250px;
+    font-size: 16px;
 }
 
-.welcome-container button:hover {
-    background:#d4af37;
-    color:#111118;
+button {
+    background: #1a1a22;
+    border: 1px solid #d4af37;
+    color: #d4af37;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 16px;
+}
+
+button:hover {
+    background: #d4af37;
+    color: #111118;
+}
+
+/* ================= GAME CONTAINER ================= */
+.game-container {
+    background: #111118;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(128, 0, 255, 0.3);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#playerTitle {
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+/* ================= STATUS & XP ================= */
+.status p {
+    margin: 5px 0;
+}
+
+.xp-bar {
+    width: 100%;
+    height: 20px;
+    background: #1a1a22;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0 20px 0;
+}
+
+.xp-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #5f00ff, #a855f7);
+    transition: width 0.4s ease;
+}
+
+/* ================= MENU LATERAL ================= */
+.menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 10px;
+    background: #111118;
+    min-width: 180px;
+    border: 1px solid #d4af37;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(128,0,255,0.3);
+    z-index: 200;
+}
+
+.menu-dropdown button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: none;
+    color: #d4af37;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.menu-dropdown button:hover {
+    background: #d4af37;
+    color: #111118;
+}
+
+/* ================= MESSAGES ================= */
+.message {
+    margin-top: 15px;
+    color: #a855f7;
+    font-weight: bold;
+}
+
+/* ================= TELA POPUPS ================= */
+#accountPopup, #guestWarningPopup, #linkAccountScreen, #adminAuthDiv {
+    background: #111118;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(128,0,255,0.3);
+}
+
+/* ================= DISCLAIMER ================= */
+.disclaimer {
+    font-size: 12px;
+    color: #a0a0a0;
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* ================= THEME TOGGLE ================= */
+.theme-toggle span {
+    font-size: 24px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.theme-toggle span:hover {
+    transform: scale(1.2);
 }
 
 /* ================= RESPONSIVO ================= */
-@media (max-width:600px){
-    .welcome-container h1 { font-size:2rem; }
-    .welcome-container h2 { font-size:1.5rem; }
-    .welcome-container h3 { font-size:1rem; }
-    .welcome-container button { font-size:1rem; padding:8px 16px; }
-    .welcome-container input, .welcome-container select { font-size:1rem; width:150px; }
+@media (max-width: 600px) {
+    .game-container, input[type="text"], select {
+        width: 90%;
+    }
+
+    .logo {
+        font-size: 36px;
+    }
+
+    .logo-btn {
+        font-size: 40px;
+    }
 }
