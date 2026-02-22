@@ -1,26 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morningstar</title>
+<link rel="stylesheet" href="style.css">
+</head>
 <body>
-    <!-- Tela Inicial -->
-    <div id="welcomeScreen" class="overlay-screen">
-        <div class="welcome-container">
-            <h1>Bem-vindo jogador</h1>
-            <h3>Você foi escolhido pelo arquiteto Morningstar à mudar sua própria vida</h3>
-            <button id="startLogoBtn" style="font-size:50px; padding:20px;">👑</button>
+
+<!-- ================= TELA INICIAL ================= -->
+<div id="welcomeScreen" class="overlay-screen">
+    <div class="welcome-container">
+        <h1>Bem-vindo jogador</h1>
+        <h3>Você foi escolhido pelo arquiteto Morningstar à mudar sua própria vida</h3>
+        <button id="startLogoBtn">👑</button>
+    </div>
+</div>
+
+<!-- ================= TELA NOME/GÊNERO ================= -->
+<div id="nameGenderScreen" class="overlay-screen" style="display:none;">
+    <div class="welcome-container">
+        <h2>Escolha seu nome e gênero</h2>
+        <input type="text" id="playerName" placeholder="Digite seu nome">
+        <select id="playerGender">
+            <option value="male">Homem</option>
+            <option value="female">Mulher</option>
+            <option value="none">Prefiro não responder</option>
+        </select>
+        <button id="startGameBtn">Começar</button>
+    </div>
+</div>
+
+<!-- ================= TELA VINCULAR CONTA ================= -->
+<div id="linkAccountScreen" class="overlay-screen" style="display:none;">
+    <div class="welcome-container">
+        <h2>Vincular Conta</h2>
+        <input type="email" id="emailInput" placeholder="Digite seu email">
+        <button id="emailSubmitBtn">Continuar</button>
+
+        <!-- Senha e palavra-chave (apenas admin) -->
+        <div id="adminAuthDiv" style="display:none; flex-direction:column; margin-top:10px;">
+            <input type="text" id="adminKey" placeholder="Digite a palavra-chave">
+            <input type="password" id="adminPassword" placeholder="Digite a senha de administrador">
+            <button id="adminSubmitBtn">Confirmar</button>
         </div>
     </div>
+</div>
 
-    <!-- Tela Nome/Gênero -->
-    <div id="nameGenderScreen" class="overlay-screen" style="display:none; flex-direction:column; align-items:center;">
-        <div class="welcome-container">
-            <h2>Escolha seu nome e gênero</h2>
-            <input type="text" id="playerName" placeholder="Digite seu nome">
-            <select id="playerGender">
-                <option value="male">Homem</option>
-                <option value="female">Mulher</option>
-                <option value="none">Prefiro não responder</option>
-            </select>
-            <button id="startGameBtn">Começar</button>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
+</html>
