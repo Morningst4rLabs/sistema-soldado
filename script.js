@@ -52,3 +52,27 @@ function showMessage(text) {
 
 // Inicializa a interface
 updateUI();
+// Menu de controle
+const menuBtn = document.getElementById("menuBtn");
+const menu = document.getElementById("menu");
+
+menuBtn.addEventListener("click", () => {
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+});
+
+// Funções básicas dos botões do menu
+function vincularConta() {
+    alert("🔗 Vincular conta ainda não implementado");
+}
+
+function verProgresso() {
+    alert("📊 Progresso: XP " + xp + " | Nível " + level + " | Patente " + rank);
+}
+
+function configuracoes() {
+    alert("⚙️ Configurações ainda não implementadas");
+}
+
+function idioma() {
+    alert("🌐 Alterar idioma ainda não implementado");
+}
