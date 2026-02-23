@@ -60,7 +60,7 @@
   </div>
 </div>
 
-<!-- WELCOME SCREEN -->
+<!-- WELCOME -->
 <div id="welcomeScreen" class="screen flex-center">
   <h1 class="logo">Morningstar</h1>
   <p class="welcome-text" id="welcomeText">
@@ -69,7 +69,7 @@
   <button id="startLogoBtn" class="logo-btn">👑</button>
 </div>
 
-<!-- NAME GENDER SCREEN -->
+<!-- NAME GENDER -->
 <div id="nameGenderScreen" class="screen flex-center">
   <h2 id="nameGenderTitle">Identificação do Jogador</h2>
   <input type="text" id="playerName" placeholder="Digite seu nome">
@@ -81,7 +81,7 @@
   <button id="startGameBtn">Continuar</button>
 </div>
 
-<!-- ACCOUNT POPUP -->
+<!-- ACCOUNT -->
 <div id="accountPopup" class="screen flex-center">
   <h2 id="accountTitle">Vincular Conta</h2>
   <p id="accountText">Deseja salvar seu progresso?</p>
@@ -96,7 +96,7 @@
   <button id="guestContinueBtn">Continuar mesmo assim</button>
 </div>
 
-<!-- LINK ACCOUNT SCREEN -->
+<!-- LINK ACCOUNT -->
 <div id="linkAccountScreen" class="screen flex-center">
   <h2 id="authTitle">Autenticação</h2>
   <p id="authText">Digite seu email ou a passagem secreta:</p>
@@ -129,10 +129,10 @@
       </div>
     </div>
     <div class="missions">
-      <button onclick="addXP(25)">📚 Estudo Profundo (+25XP)</button>
-      <button onclick="addXP(15)">📖 Leitura Estratégica (+15XP)</button>
-      <button onclick="addXP(30)">🧠 Produção Intelectual (+30XP)</button>
-      <button onclick="addXP(10)">💪 Treino 1h (+10XP)</button>
+      <button id="estudoBtn" onclick="addXP(25)">📚 Estudo Profundo (+25XP)</button>
+      <button id="leituraBtn" onclick="addXP(15)">📖 Leitura Estratégica (+15XP)</button>
+      <button id="producaoBtn" onclick="addXP(30)">🧠 Produção Intelectual (+30XP)</button>
+      <button id="treinoBtn" onclick="addXP(10)">💪 Treino 1h (+10XP)</button>
     </div>
     <div class="message" id="message"></div>
     <div id="menu" class="menu-dropdown">
