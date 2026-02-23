@@ -2,7 +2,7 @@
 // MORNINGSTAR - FASE NECROMANCER FINAL
 // ======================================
 
-// --------- CONSTANTES (sempre no topo!) ----------
+// --------- CONSTANTES ----------
 const STORAGE_KEY = "morningstarProgress_v1";
 const TERMO_KEY = "morningstarTermoAceito_v1";
 
@@ -60,7 +60,7 @@ const translations = {
   }
 };
 
-// --------- ESTADO DO SISTEMA ----------
+// --------- ESTADO ----------
 let xp = 0;
 let level = 1;
 let xpNext = 100;
@@ -234,16 +234,23 @@ function updateRank() {
 }
 
 function updateUI() {
-  document.getElementById("xp").innerText = xp;
-  document.getElementById("xpNext").innerText = xpNext;
-  document.getElementById("level").innerText = level;
-  document.getElementById("rank").innerText = rank;
-  document.getElementById("xpFill").style.width = (xp / xpNext) * 100 + "%";
+  const xpEl = document.getElementById("xp");
+  const xpNextEl = document.getElementById("xpNext");
+  const levelEl = document.getElementById("level");
+  const rankEl = document.getElementById("rank");
+  const xpFillEl = document.getElementById("xpFill");
+
+  if (xpEl) xpEl.innerText = xp;
+  if (xpNextEl) xpNextEl.innerText = xpNext;
+  if (levelEl) levelEl.innerText = level;
+  if (rankEl) rankEl.innerText = rank;
+  if (xpFillEl) xpFillEl.style.width = (xp / xpNext) * 100 + "%";
 }
 
 function updateTitle() {
   let prefix = isArchitect ? "Sr." : (playerGender === "male" ? "Sr." : (playerGender === "female" ? "Sra." : ""));
-  document.getElementById("playerTitle").innerText = `SISTEMA ${rank} - ${prefix} ${playerName}`;
+  const titleEl = document.getElementById("playerTitle");
+  if (titleEl) titleEl.innerText = `SISTEMA ${rank} - ${prefix} ${playerName}`;
 }
 
 const menu = document.getElementById("menu");
