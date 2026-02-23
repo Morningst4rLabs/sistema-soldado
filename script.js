@@ -2,18 +2,9 @@
 // MORNINGSTAR - FASE NECROMANCER FINAL
 // ======================================
 
-// --------- ESTADO DO SISTEMA ----------
-let xp = 0;
-let level = 1;
-let xpNext = 100;
-let rank = "Soldado";
-let playerName = "";
-let playerGender = "none";
-let isArchitect = false;
-let language = "pt";
-let dailyXp = 0;
-let lastDay = new Date().toDateString();
-let lastTaskTime = 0;
+// --------- CONSTANTES (primeiro, antes de tudo) ----------
+const STORAGE_KEY = "morningstarProgress_v1";
+const TERMO_KEY = "morningstarTermoAceito_v1";
 
 // --------- TRADUÇÕES ----------
 const translations = {
@@ -69,6 +60,20 @@ const translations = {
   }
 };
 
+// --------- ESTADO DO SISTEMA ----------
+let xp = 0;
+let level = 1;
+let xpNext = 100;
+let rank = "Soldado";
+let playerName = "";
+let playerGender = "none";
+let isArchitect = false;
+let language = "pt";
+let dailyXp = 0;
+let lastDay = new Date().toDateString();
+let lastTaskTime = 0; // timestamp da última tarefa
+
+// --------- FUNÇÕES ----------
 function applyLanguage(lang) {
   language = lang;
   saveProgress();
@@ -82,7 +87,6 @@ function applyLanguage(lang) {
   updateTitle();
 }
 
-// --------- CARREGAR PROGRESSO ----------
 function loadProgress() {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
@@ -110,7 +114,6 @@ function loadProgress() {
   }
 }
 
-// --------- SALVAR PROGRESSO ----------
 function saveProgress() {
   const data = {
     xp,
@@ -127,13 +130,11 @@ function saveProgress() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-// --------- RESET ----------
 function resetProgress() {
   localStorage.removeItem(STORAGE_KEY);
   location.reload();
 }
 
-// --------- ELEMENTOS ----------
 const screens = {
   welcome: document.getElementById("welcomeScreen"),
   name: document.getElementById("nameGenderScreen"),
@@ -163,7 +164,6 @@ function showScreen(screenName) {
   screens[screenName].style.display = "flex";
 }
 
-// --------- TERMO ----------
 function showTermoModal() {
   const modal = document.getElementById("termoModal");
   if (modal) modal.style.display = "flex";
@@ -171,7 +171,6 @@ function showTermoModal() {
   if (fecharBtn) fecharBtn.onclick = () => modal.style.display = "none";
 }
 
-// --------- DENIED ----------
 function showDeniedModal() {
   const modal = document.getElementById("deniedModal");
   if (modal) modal.style.display = "flex";
@@ -182,7 +181,6 @@ function showDeniedModal() {
   };
 }
 
-// --------- SAÚDE ----------
 function showSaudeModal() {
   const modal = document.getElementById("saudeModal");
   if (modal) modal.style.display = "flex";
@@ -193,13 +191,13 @@ function showSaudeModal() {
   };
 }
 
-// --------- XP ----------
 function addXP(amount) {
   const now = Date.now();
-  if (now - lastTaskTime < 10000) {
+  if (now - lastTaskTime < 10000) { // 10 segundos entre tarefas
     showPopup("O Arquiteto está de olho sempre, não tente o enganar!");
     return;
   }
+
   lastTaskTime = now;
 
   const today = new Date().toDateString();
@@ -208,7 +206,7 @@ function addXP(amount) {
     lastDay = today;
   }
 
-  if (dailyXp + amount > 400) {
+  if (dailyXp + amount > 400) { // Dobrado: 400 XP/dia
     showSaudeModal();
     return;
   }
@@ -249,7 +247,7 @@ function updateTitle() {
   document.getElementById("playerTitle").innerText = `SISTEMA ${rank} - ${prefix} ${playerName}`;
 }
 
-// --------- MENU ----------
+// --------- MENU LATERAL ----------
 const menu = document.getElementById("menu");
 document.getElementById("menuBtn").onclick = () => {
   menu.style.display = menu.style.display === "block" ? "none" : "block";
@@ -282,13 +280,70 @@ function showSettings() {
   };
 }
 
+// --------- EVENT LISTENERS ----------
+document.getElementById("startLogoBtn").onclick = () => showScreen("name");
+
+document.getElementById("startGameBtn").onclick = () => {
+  playerName = document.getElementById("playerName").value.trim() || "Jogador";
+  playerGender = document.getElementById("playerGender").value;
+  saveProgress();
+  showScreen("account");
+};
+
+document.getElementById("guestBtn").onclick = () => showScreen("guestWarning");
+
+document.getElementById("guestContinueBtn").onclick = () => {
+  showScreen("game");
+  updateTitle();
+  showPopup("Modo visitante ativado. Progresso não será salvo.");
+  saveProgress();
+};
+
+document.getElementById("linkAccountBtn").onclick = () => showScreen("link");
+
+document.getElementById("emailSubmitBtn").onclick = () => {
+  const value = document.getElementById("emailInput").value.trim();
+
+  if (value === "MorningstarLabs2810") {
+    document.getElementById("adminAuthDiv").style.display = "flex";
+    showPopup("Passagem secreta reconhecida.");
+  } else {
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (emailRegex.test(value)) {
+      showPopup("Conta comum vinculada.");
+      showScreen("game");
+      updateTitle();
+      saveProgress();
+    } else {
+      showDeniedModal();
+    }
+  }
+};
+
+document.getElementById("adminSubmitBtn").onclick = () => {
+  const password = document.getElementById("adminPassword").value.trim();
+
+  if (password === "Biel_2810") {
+    isArchitect = true;
+    playerName = "Morningstar";
+    showScreen("game");
+    updateTitle();
+    showPopup("Bem-vindo de volta Arquiteto Morningstar");
+    saveProgress();
+  } else {
+    showPopup("Senha incorreta.");
+  }
+};
+
 // --------- INICIALIZAÇÃO ----------
 loadProgress();
 updateUI();
 applyLanguage(language);
 
+// Força checagem do termo
 showTermoModal();
 
+// Se não tem nome, mostra welcome; senão game
 if (!playerName) {
   showScreen("welcome");
 } else {
@@ -298,5 +353,5 @@ if (!playerName) {
 // Bind termo
 document.querySelectorAll('.term-link, #viewTermBtn').forEach(el => el.onclick = showTermoModal);
 
-// Bind voltar jogo em configs
+// Bind voltar jogo
 document.getElementById("backGameBtn").onclick = () => showScreen("game");
