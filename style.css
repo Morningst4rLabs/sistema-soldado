@@ -1,357 +1,347 @@
-/* ================= BODY & FONT ================= */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+// ======================================
+// MORNINGSTAR - FASE NECROMANCER FINAL
+// ======================================
 
-body {
-    margin: 0;
-    font-family: 'Playfair Display', serif;
-    background: #0a0a0f;
-    color: #d4af37;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+// --------- ESTADO DO SISTEMA ----------
+let xp = 0;
+let level = 1;
+let xpNext = 100;
+let rank = "Soldado";
+let playerName = "";
+let playerGender = "none";
+let isArchitect = false;
+let language = "pt";
+let dailyXp = 0;
+let lastDay = new Date().toDateString();
+
+// --------- TRADUÇÕES ----------
+const translations = {
+  pt: {
+    welcomeText: "Você foi escolhido pelo Arquiteto Morningstar a mudar sua própria vida.",
+    termoTitle: "TERMO DE RESPONSABILIDADE E USO",
+    deniedTitle: "ACESSO NEGADO",
+    saudeTitle: "ORDENS DO ARQUITETO",
+    settingsTitle: "Configurações",
+    themeLabel: "Tema",
+    languageLabel: "Idioma",
+    otherOptionsLabel: "Outras Opções",
+    resetBtn: "Resetar Progresso",
+    viewTermBtn: "Ver Termo de Responsabilidade",
+    aboutBtn: "Sobre o Arquiteto",
+    backGameBtn: "Voltar ao Jogo",
+    rankLabel: "Patente",
+    levelLabel: "Nível",
+    xpLabel: "XP",
+    nameGenderTitle: "Identificação do Jogador",
+    accountTitle: "Vincular Conta",
+    accountText: "Deseja salvar seu progresso?",
+    guestWarningTitle: "Atenção",
+    guestWarningText: "Sem vincular conta, seu progresso não será salvo.",
+    authTitle: "Autenticação",
+    authText: "Digite seu email ou a passagem secreta:",
+    adminPasswordLabel: "Digite a senha do Arquiteto:"
+  },
+  en: {
+    welcomeText: "You were chosen by the Architect Morningstar to change your own life.",
+    termoTitle: "TERMS OF RESPONSIBILITY AND USE",
+    deniedTitle: "ACCESS DENIED",
+    saudeTitle: "ARCHITECT'S ORDERS",
+    settingsTitle: "Settings",
+    themeLabel: "Theme",
+    languageLabel: "Language",
+    otherOptionsLabel: "Other Options",
+    resetBtn: "Reset Progress",
+    viewTermBtn: "View Terms of Responsibility",
+    aboutBtn: "About the Architect",
+    backGameBtn: "Back to Game",
+    rankLabel: "Rank",
+    levelLabel: "Level",
+    xpLabel: "XP",
+    nameGenderTitle: "Player Identification",
+    accountTitle: "Link Account",
+    accountText: "Do you want to save your progress?",
+    guestWarningTitle: "Attention",
+    guestWarningText: "Without linking an account, your progress will not be saved.",
+    authTitle: "Authentication",
+    authText: "Enter your email or secret passage:",
+    adminPasswordLabel: "Enter the Architect's password:"
+  }
+};
+
+function applyLanguage(lang) {
+  language = lang;
+  saveProgress();
+
+  // Atualiza textos
+  document.querySelectorAll('[id$="Text"], [id$="Title"], [id$="Label"]').forEach(el => {
+    const key = el.id;
+    if (translations[lang][key]) el.innerText = translations[lang][key];
+  });
+
+  // Atualiza título do jogador
+  updateTitle();
 }
 
-/* ================= TELAS ================= */
-.screen {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: #0a0a0f;
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-    padding: 20px;
-    box-sizing: border-box;
-}
+// --------- CARREGAR PROGRESSO ----------
+function loadProgress() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      xp = data.xp || 0;
+      level = data.level || 1;
+      xpNext = data.xpNext || 100;
+      rank = data.rank || "Soldado";
+      playerName = data.playerName || "";
+      playerGender = data.playerGender || "none";
+      isArchitect = data.isArchitect || false;
+      language = data.language || "pt";
+      dailyXp = data.dailyXp || 0;
+      lastDay = data.lastDay || new Date().toDateString();
 
-.flex-center {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
+      applyLanguage(language);
 
-/* ================= LOGO / TELA INICIAL ================= */
-.logo {
-    font-family: 'Alegerian', serif;
-    font-size: 48px;
-    color: #d4af37;
-    margin-bottom: 20px;
-    text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-}
-
-.logo-btn {
-    font-size: 50px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.logo-btn:hover {
-    transform: scale(1.2);
-}
-
-/* ================= INPUTS ================= */
-input[type="text"], input[type="password"], select {
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid #d4af37;
-    background: #111118;
-    color: #d4af37;
-    width: 250px;
-    font-size: 16px;
-}
-
-button {
-    background: #1a1a22;
-    border: 1px solid #d4af37;
-    color: #d4af37;
-    padding: 10px 15px;
-    margin: 5px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 16px;
-}
-
-button:hover {
-    background: #d4af37;
-    color: #111118;
-}
-
-/* ================= GAME CONTAINER ================= */
-.game-container {
-    background: #111118;
-    padding: 30px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-    box-shadow: 0 0 25px rgba(128, 0, 255, 0.3);
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-#playerTitle {
-    margin-bottom: 20px;
-    letter-spacing: 2px;
-}
-
-/* ================= STATUS & XP ================= */
-.status p {
-    margin: 5px 0;
-}
-
-.xp-bar {
-    width: 100%;
-    height: 20px;
-    background: #1a1a22;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 10px 0 20px 0;
-}
-
-.xp-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #5f00ff, #a855f7);
-    transition: width 0.4s ease;
-}
-
-/* ================= MENU LATERAL ================= */
-.menu-dropdown {
-    display: none;
-    position: absolute;
-    top: 60px;
-    left: 10px;
-    background: #111118;
-    min-width: 180px;
-    border: 1px solid #d4af37;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(128,0,255,0.3);
-    z-index: 200;
-}
-
-.menu-dropdown button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    background: none;
-    color: #d4af37;
-    text-align: left;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.menu-dropdown button:hover {
-    background: #d4af37;
-    color: #111118;
-}
-
-/* ================= MESSAGES ================= */
-.message {
-    margin-top: 15px;
-    color: #a855f7;
-    font-weight: bold;
-}
-
-/* ================= TELA POPUPS ================= */
-#accountPopup, #guestWarningPopup, #linkAccountScreen, #adminAuthDiv, #settingsScreen .game-container {
-    background: #111118;
-    padding: 25px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 0 25px rgba(128,0,255,0.3);
-}
-
-/* ================= DISCLAIMER ================= */
-.disclaimer {
-    font-size: 12px;
-    color: #a0a0a0;
-    margin-top: 15px;
-    text-align: center;
-}
-
-.term-link {
-  color: #d4af37;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.term-link:hover {
-  color: #ff0000;
-}
-
-/* ================= THEME TOGGLE ================= */
-.theme-toggle span {
-    font-size: 24px;
-    cursor: pointer;
-    margin-left: 10px;
-}
-
-.theme-toggle span:hover {
-    transform: scale(1.2);
-}
-
-/* ================= RESPONSIVO ================= */
-@media (max-width: 600px) {
-    .game-container, input[type="text"], select {
-        width: 90%;
+      if (playerName && playerGender) {
+        updateTitle();
+        updateUI();
+        showScreen("game");
+      }
+    } catch (e) {
+      console.error("Erro ao carregar progresso:", e);
+      showPopup("Progresso corrompido. Reiniciando...");
+      resetProgress();
     }
+  } else {
+    applyLanguage("pt");
+  }
+}
 
-    .logo {
-        font-size: 36px;
+// --------- SALVAR PROGRESSO ----------
+function saveProgress() {
+  const data = {
+    xp,
+    level,
+    xpNext,
+    rank,
+    playerName,
+    playerGender,
+    isArchitect,
+    language,
+    dailyXp,
+    lastDay
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+// --------- RESET PROGRESSO ----------
+function resetProgress() {
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+// --------- ELEMENTOS ----------
+const screens = {
+  welcome: document.getElementById("welcomeScreen"),
+  name: document.getElementById("nameGenderScreen"),
+  account: document.getElementById("accountPopup"),
+  guestWarning: document.getElementById("guestWarningPopup"),
+  link: document.getElementById("linkAccountScreen"),
+  game: document.getElementById("gameScreen"),
+  settings: document.getElementById("settingsScreen")
+};
+
+const popupMessage = document.createElement("div");
+popupMessage.className = "internal-popup";
+document.body.appendChild(popupMessage);
+
+// --------- POPUP INTERNO ----------
+function showPopup(text) {
+  popupMessage.innerText = text;
+  popupMessage.style.display = "flex";
+  setTimeout(() => {
+    popupMessage.style.display = "none";
+  }, 3000);
+}
+
+// --------- CONTROLE DE TELAS ----------
+function showScreen(screenName) {
+  if (!screens[screenName]) {
+    showPopup("Erro: Tela " + screenName + " não encontrada.");
+    return;
+  }
+  Object.values(screens).forEach(s => s.style.display = "none");
+  screens[screenName].style.display = "flex";
+}
+
+// --------- TERMO DE RESPONSABILIDADE ----------
+function showTermoModal() {
+  const modal = document.getElementById("termoModal");
+  if (modal) {
+    modal.style.display = "flex";
+  }
+
+  const fecharBtn = document.getElementById("termoFecharBtn");
+  if (fecharBtn) {
+    fecharBtn.onclick = () => modal.style.display = "none";
+  }
+}
+
+// --------- OUTROS MODAIS (denied, saude) ----------
+function showDeniedModal() {
+  const modal = document.getElementById("deniedModal");
+  if (modal) modal.style.display = "flex";
+  const voltarBtn = document.getElementById("deniedVoltarBtn");
+  if (voltarBtn) voltarBtn.onclick = () => {
+    modal.style.display = "none";
+    showPopup("Tentativa de entrar em área restrita registrada.");
+  };
+}
+
+function showSaudeModal() {
+  const modal = document.getElementById("saudeModal");
+  if (modal) modal.style.display = "flex";
+  const voltarBtn = document.getElementById("saudeVoltarBtn");
+  if (voltarBtn) voltarBtn.onclick = () => {
+    modal.style.display = "none";
+    showPopup("Descanso ordenado. Volte amanhã.");
+  };
+}
+
+// --------- FLUXO INICIAL ----------
+document.getElementById("startLogoBtn").onclick = () => showScreen("name");
+
+document.getElementById("startGameBtn").onclick = () => {
+  playerName = document.getElementById("playerName").value.trim() || "Jogador";
+  playerGender = document.getElementById("playerGender").value;
+  saveProgress();
+  showScreen("account");
+};
+
+document.getElementById("guestBtn").onclick = () => showScreen("guestWarning");
+
+document.getElementById("guestContinueBtn").onclick = () => {
+  showScreen("game");
+  updateTitle();
+  showPopup("Modo visitante ativado. Progresso não será salvo.");
+  saveProgress();
+};
+
+document.getElementById("linkAccountBtn").onclick = () => showScreen("link");
+
+document.getElementById("emailSubmitBtn").onclick = () => {
+  const value = document.getElementById("emailInput").value.trim();
+
+  if (value === "MorningstarLabs2810") {
+    document.getElementById("adminAuthDiv").style.display = "flex";
+    showPopup("Passagem secreta reconhecida.");
+  } else {
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (emailRegex.test(value)) {
+      showPopup("Conta comum vinculada.");
+      showScreen("game");
+      updateTitle();
+      saveProgress();
+    } else {
+      showDeniedModal();
     }
+  }
+};
 
-    .logo-btn {
-        font-size: 40px;
-    }
+document.getElementById("adminSubmitBtn").onclick = () => {
+  const password = document.getElementById("adminPassword").value.trim();
+
+  if (password === "Biel_2810") {
+    isArchitect = true;
+    playerName = "Morningstar";
+    showScreen("game");
+    updateTitle();
+    showPopup("Bem-vindo de volta Arquiteto Morningstar");
+    saveProgress();
+  } else {
+    showPopup("Senha incorreta.");
+  }
+};
+
+// --------- XP ----------
+function addXP(amount) {
+  const today = new Date().toDateString();
+  if (today !== lastDay) {
+    dailyXp = 0;
+    lastDay = today;
+  }
+
+  if (dailyXp + amount > 200) {
+    showSaudeModal();
+    return;
+  }
+
+  xp += amount;
+  dailyXp += amount;
+
+  while (xp >= xpNext) {
+    xp -= xpNext;
+    level++;
+    xpNext = Math.floor(xpNext * 1.5);
+    updateRank();
+    showPopup("⚡ LEVEL UP!");
+  }
+
+  updateUI();
+  saveProgress();
 }
 
-/* ================= MODAL TERMO / NEGADO / SAÚDE ================= */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+function updateRank() {
+  if (level >= 20) rank = "Rei";
+  else if (level >= 15) rank = "General";
+  else if (level >= 10) rank = "Capitão";
+  else if (level >= 5) rank = "Sargento";
+  else rank = "Soldado";
 }
 
-.modal-content {
-  background: #111118;
-  border: 2px solid #d4af37;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 600px;
-  max-height: 85vh;
-  overflow-y: auto;
-  padding: 25px;
-  box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
-  text-align: left;
-  color: #d4af37;
+function updateUI() {
+  document.getElementById("xp").innerText = xp;
+  document.getElementById("xpNext").innerText = xpNext;
+  document.getElementById("level").innerText = level;
+  document.getElementById("rank").innerText = rank;
+  document.getElementById("xpFill").style.width = (xp / xpNext) * 100 + "%";
 }
 
-.modal-content h2 {
-  text-align: center;
-  color: #ff0000;
-  margin-bottom: 20px;
+function updateTitle() {
+  let prefix = isArchitect ? "Sr." : (playerGender === "male" ? "Sr." : (playerGender === "female" ? "Sra." : ""));
+  document.getElementById("playerTitle").innerText = `SISTEMA ${rank} - ${prefix} ${playerName}`;
 }
 
-.modal-body {
-  font-size: 0.95em;
-  line-height: 1.6;
-  margin-bottom: 20px;
+// --------- MENU ----------
+const menu = document.getElementById("menu");
+document.getElementById("menuBtn").onclick = () => {
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+};
+
+// --------- THEME ----------
+document.getElementById("lightModeBtn").onclick = () => document.body.classList.add("light-mode"), document.body.classList.remove("dark-mode");
+document.getElementById("darkModeBtn").onclick = () => document.body.classList.add("dark-mode"), document.body.classList.remove("light-mode");
+document.getElementById("settingsLightModeBtn").onclick = () => document.body.classList.add("light-mode"), document.body.classList.remove("dark-mode");
+document.getElementById("settingsDarkModeBtn").onclick = () => document.body.classList.add("dark-mode"), document.body.classList.remove("light-mode");
+
+// --------- SETTINGS ----------
+function showSettings() {
+  showScreen("settings");
+  document.getElementById("languageSelect").value = language;
+  document.getElementById("languageSelect").onchange = () => {
+    applyLanguage(document.getElementById("languageSelect").value);
+    location.reload(); // recarrega pra aplicar em todos os textos
+  };
 }
 
-.modal-body ol {
-  padding-left: 20px;
+// --------- INICIALIZAÇÃO ----------
+loadProgress();
+updateUI();
+
+const termoMostrado = showTermoModal();
+
+if (!termoMostrado) {
+  showScreen("welcome");
 }
 
-.modal-buttons {
-  display: flex;
-  justify-content: center;
-}
-
-.btn-primary {
-  background: #d4af37;
-  color: #111118;
-  font-weight: bold;
-}
-
-.btn-secondary {
-  background: #1a1a22;
-  border: 1px solid #888;
-}
-
-/* ================= MODO CLARO ================= */
-.light-mode {
-  background: #f8f5e6;
-  color: #b8860b;
-}
-
-.light-mode .game-container, .light-mode #settingsScreen .game-container {
-  background: #fffaf0;
-  box-shadow: 0 0 25px rgba(184, 134, 11, 0.3);
-}
-
-.light-mode button {
-  background: #fffaf0;
-  border: 1px solid #b8860b;
-  color: #b8860b;
-}
-
-.light-mode button:hover {
-  background: #b8860b;
-  color: #fffaf0;
-}
-
-.light-mode input[type="text"], .light-mode input[type="password"], .light-mode select {
-  background: #fffaf0;
-  border: 1px solid #b8860b;
-  color: #b8860b;
-}
-
-.light-mode .xp-bar {
-  background: #e0d4b8;
-}
-
-.light-mode .xp-fill {
-  background: linear-gradient(90deg, #b8860b, #d4af37);
-}
-
-.light-mode .menu-dropdown {
-  background: #fffaf0;
-  border: 1px solid #b8860b;
-}
-
-.light-mode .disclaimer {
-  color: #8b6f47;
-}
-
-.light-mode .internal-popup {
-  background: #fffaf0;
-  color: #b8860b;
-  box-shadow: 0 0 15px rgba(184, 134, 11, 0.4);
-}
-
-.light-mode .screen {
-  background: #f8f5e6;
-}
-
-.light-mode .modal-content {
-  background: #fffaf0;
-  border: 2px solid #b8860b;
-  color: #b8860b;
-}
-
-/* ================= INTERNAL POPUP ================= */
-.internal-popup {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #111118;
-  color: #d4af37;
-  padding: 15px 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(128,0,255,0.4);
-  display: none;
-  z-index: 999;
-  font-weight: bold;
-}
+// Bind pros botões de ver termo
+document.querySelectorAll('.term-link, #viewTermBtn').forEach(el => el.onclick = showTermoModal);
