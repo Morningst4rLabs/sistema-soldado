@@ -295,9 +295,60 @@ button:hover {
   color: #d4af37;
 }
 
+/* MODO CLARO - corrigido para manter vibe Morningstar */
 .light-mode {
-  background: #ffffff;
+  background: #f8f5e6; /* bege claro/off-white, não branco puro */
+  color: #b8860b; /* dourado escuro para texto principal */
+}
+
+.light-mode .game-container {
+  background: #fffaf0; /* creme suave */
+  box-shadow: 0 0 25px rgba(184, 134, 11, 0.3); /* sombra dourada */
+}
+
+.light-mode button {
+  background: #fffaf0;
+  border: 1px solid #b8860b;
   color: #b8860b;
+}
+
+.light-mode button:hover {
+  background: #b8860b;
+  color: #fffaf0;
+}
+
+.light-mode input[type="text"], .light-mode input[type="password"], .light-mode select {
+  background: #fffaf0;
+  border: 1px solid #b8860b;
+  color: #b8860b;
+}
+
+.light-mode .xp-bar {
+  background: #e0d4b8;
+}
+
+.light-mode .xp-fill {
+  background: linear-gradient(90deg, #b8860b, #d4af37);
+}
+
+.light-mode .menu-dropdown {
+  background: #fffaf0;
+  border: 1px solid #b8860b;
+}
+
+.light-mode .disclaimer {
+  color: #8b6f47;
+}
+
+.light-mode .internal-popup {
+  background: #fffaf0;
+  color: #b8860b;
+  box-shadow: 0 0 15px rgba(184, 134, 11, 0.4);
+}
+
+/* Força telas no light-mode */
+.light-mode .screen {
+  background: #f8f5e6;
 }
 
 .internal-popup {
