@@ -10,11 +10,11 @@ let rank = "Soldado";
 let playerName = "";
 let playerGender = "none";
 let isArchitect = false;
-let language = "pt"; // pt ou en
+let language = "pt";
 let dailyXp = 0;
 let lastDay = new Date().toDateString();
 
-// --------- TRADUÇÕES SIMPLES (MVP) ----------
+// --------- TRADUÇÕES ----------
 const translations = {
   pt: {
     welcomeText: "Você foi escolhido pelo Arquiteto Morningstar a mudar sua própria vida.",
@@ -29,7 +29,17 @@ const translations = {
     viewTermBtn: "Ver Termo de Responsabilidade",
     aboutBtn: "Sobre o Arquiteto",
     backGameBtn: "Voltar ao Jogo",
-    // ... adicione mais chaves conforme necessário
+    rankLabel: "Patente",
+    levelLabel: "Nível",
+    xpLabel: "XP",
+    nameGenderTitle: "Identificação do Jogador",
+    accountTitle: "Vincular Conta",
+    accountText: "Deseja salvar seu progresso?",
+    guestWarningTitle: "Atenção",
+    guestWarningText: "Sem vincular conta, seu progresso não será salvo.",
+    authTitle: "Autenticação",
+    authText: "Digite seu email ou a passagem secreta:",
+    adminPasswordLabel: "Digite a senha do Arquiteto:"
   },
   en: {
     welcomeText: "You were chosen by the Architect Morningstar to change your own life.",
@@ -44,29 +54,31 @@ const translations = {
     viewTermBtn: "View Terms of Responsibility",
     aboutBtn: "About the Architect",
     backGameBtn: "Back to Game",
-    // ... 
+    rankLabel: "Rank",
+    levelLabel: "Level",
+    xpLabel: "XP",
+    nameGenderTitle: "Player Identification",
+    accountTitle: "Link Account",
+    accountText: "Do you want to save your progress?",
+    guestWarningTitle: "Attention",
+    guestWarningText: "Without linking an account, your progress will not be saved.",
+    authTitle: "Authentication",
+    authText: "Enter your email or secret passage:",
+    adminPasswordLabel: "Enter the Architect's password:"
   }
 };
 
-// --------- FUNÇÃO PARA APLICAR IDIOMA ----------
 function applyLanguage(lang) {
   language = lang;
   saveProgress();
 
-  document.getElementById("welcomeText").innerText = translations[lang].welcomeText;
-  document.getElementById("termoTitle").innerText = translations[lang].termoTitle;
-  document.getElementById("deniedTitle").innerText = translations[lang].deniedTitle;
-  document.getElementById("saudeTitle").innerText = translations[lang].saudeTitle;
-  document.getElementById("settingsTitle").innerText = translations[lang].settingsTitle;
-  document.getElementById("themeLabel").innerText = translations[lang].themeLabel;
-  document.getElementById("languageLabel").innerText = translations[lang].languageLabel;
-  document.getElementById("otherOptionsLabel").innerText = translations[lang].otherOptionsLabel;
-  document.getElementById("resetBtn").innerText = translations[lang].resetBtn;
-  document.getElementById("viewTermBtn").innerText = translations[lang].viewTermBtn;
-  document.getElementById("aboutBtn").innerText = translations[lang].aboutBtn;
-  document.getElementById("backGameBtn").innerText = translations[lang].backGameBtn;
+  // Atualiza textos
+  document.querySelectorAll('[id$="Text"], [id$="Title"], [id$="Label"]').forEach(el => {
+    const key = el.id;
+    if (translations[lang][key]) el.innerText = translations[lang][key];
+  });
 
-  // Atualiza título se já estiver no game
+  // Atualiza título do jogador
   updateTitle();
 }
 
@@ -153,6 +165,10 @@ function showPopup(text) {
 
 // --------- CONTROLE DE TELAS ----------
 function showScreen(screenName) {
+  if (!screens[screenName]) {
+    showPopup("Erro: Tela " + screenName + " não encontrada.");
+    return;
+  }
   Object.values(screens).forEach(s => s.style.display = "none");
   screens[screenName].style.display = "flex";
 }
@@ -166,48 +182,33 @@ function showTermoModal() {
 
   const fecharBtn = document.getElementById("termoFecharBtn");
   if (fecharBtn) {
-    fecharBtn.onclick = () => {
-      modal.style.display = "none";
-    };
+    fecharBtn.onclick = () => modal.style.display = "none";
   }
 }
 
-// --------- MODAL ACESSO NEGADO ----------
+// --------- OUTROS MODAIS (denied, saude) ----------
 function showDeniedModal() {
   const modal = document.getElementById("deniedModal");
-  if (modal) {
-    modal.style.display = "flex";
-  }
-
+  if (modal) modal.style.display = "flex";
   const voltarBtn = document.getElementById("deniedVoltarBtn");
-  if (voltarBtn) {
-    voltarBtn.onclick = () => {
-      modal.style.display = "none";
-      showPopup("Tentativa de entrar em área restrita registrada.");
-    };
-  }
+  if (voltarBtn) voltarBtn.onclick = () => {
+    modal.style.display = "none";
+    showPopup("Tentativa de entrar em área restrita registrada.");
+  };
 }
 
-// --------- MODAL SAÚDE ----------
 function showSaudeModal() {
   const modal = document.getElementById("saudeModal");
-  if (modal) {
-    modal.style.display = "flex";
-  }
-
+  if (modal) modal.style.display = "flex";
   const voltarBtn = document.getElementById("saudeVoltarBtn");
-  if (voltarBtn) {
-    voltarBtn.onclick = () => {
-      modal.style.display = "none";
-      showPopup("Descanso ordenado. Volte amanhã.");
-    };
-  }
+  if (voltarBtn) voltarBtn.onclick = () => {
+    modal.style.display = "none";
+    showPopup("Descanso ordenado. Volte amanhã.");
+  };
 }
 
 // --------- FLUXO INICIAL ----------
-document.getElementById("startLogoBtn").onclick = () => {
-  showScreen("name");
-};
+document.getElementById("startLogoBtn").onclick = () => showScreen("name");
 
 document.getElementById("startGameBtn").onclick = () => {
   playerName = document.getElementById("playerName").value.trim() || "Jogador";
@@ -216,9 +217,7 @@ document.getElementById("startGameBtn").onclick = () => {
   showScreen("account");
 };
 
-document.getElementById("guestBtn").onclick = () => {
-  showScreen("guestWarning");
-};
+document.getElementById("guestBtn").onclick = () => showScreen("guestWarning");
 
 document.getElementById("guestContinueBtn").onclick = () => {
   showScreen("game");
@@ -227,9 +226,7 @@ document.getElementById("guestContinueBtn").onclick = () => {
   saveProgress();
 };
 
-document.getElementById("linkAccountBtn").onclick = () => {
-  showScreen("link");
-};
+document.getElementById("linkAccountBtn").onclick = () => showScreen("link");
 
 document.getElementById("emailSubmitBtn").onclick = () => {
   const value = document.getElementById("emailInput").value.trim();
@@ -265,7 +262,7 @@ document.getElementById("adminSubmitBtn").onclick = () => {
   }
 };
 
-// --------- SISTEMA DE XP ----------
+// --------- XP ----------
 function addXP(amount) {
   const today = new Date().toDateString();
   if (today !== lastDay) {
@@ -293,7 +290,48 @@ function addXP(amount) {
   saveProgress();
 }
 
-// ... (funções updateRank, updateUI, updateTitle, menu, theme toggle, showSettings, showTermoModal, etc. – mantenha como antes) ...
+function updateRank() {
+  if (level >= 20) rank = "Rei";
+  else if (level >= 15) rank = "General";
+  else if (level >= 10) rank = "Capitão";
+  else if (level >= 5) rank = "Sargento";
+  else rank = "Soldado";
+}
+
+function updateUI() {
+  document.getElementById("xp").innerText = xp;
+  document.getElementById("xpNext").innerText = xpNext;
+  document.getElementById("level").innerText = level;
+  document.getElementById("rank").innerText = rank;
+  document.getElementById("xpFill").style.width = (xp / xpNext) * 100 + "%";
+}
+
+function updateTitle() {
+  let prefix = isArchitect ? "Sr." : (playerGender === "male" ? "Sr." : (playerGender === "female" ? "Sra." : ""));
+  document.getElementById("playerTitle").innerText = `SISTEMA ${rank} - ${prefix} ${playerName}`;
+}
+
+// --------- MENU ----------
+const menu = document.getElementById("menu");
+document.getElementById("menuBtn").onclick = () => {
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+};
+
+// --------- THEME ----------
+document.getElementById("lightModeBtn").onclick = () => document.body.classList.add("light-mode"), document.body.classList.remove("dark-mode");
+document.getElementById("darkModeBtn").onclick = () => document.body.classList.add("dark-mode"), document.body.classList.remove("light-mode");
+document.getElementById("settingsLightModeBtn").onclick = () => document.body.classList.add("light-mode"), document.body.classList.remove("dark-mode");
+document.getElementById("settingsDarkModeBtn").onclick = () => document.body.classList.add("dark-mode"), document.body.classList.remove("light-mode");
+
+// --------- SETTINGS ----------
+function showSettings() {
+  showScreen("settings");
+  document.getElementById("languageSelect").value = language;
+  document.getElementById("languageSelect").onchange = () => {
+    applyLanguage(document.getElementById("languageSelect").value);
+    location.reload(); // recarrega pra aplicar em todos os textos
+  };
+}
 
 // --------- INICIALIZAÇÃO ----------
 loadProgress();
@@ -304,3 +342,6 @@ const termoMostrado = showTermoModal();
 if (!termoMostrado) {
   showScreen("welcome");
 }
+
+// Bind pros botões de ver termo
+document.querySelectorAll('.term-link, #viewTermBtn').forEach(el => el.onclick = showTermoModal);
