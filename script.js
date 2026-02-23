@@ -13,6 +13,7 @@ let isArchitect = false;
 let language = "pt";
 let dailyXp = 0;
 let lastDay = new Date().toDateString();
+let lastTaskTime = 0; // timestamp da última tarefa
 
 // --------- TRADUÇÕES ----------
 const translations = {
@@ -72,13 +73,13 @@ function applyLanguage(lang) {
   language = lang;
   saveProgress();
 
-  // Atualiza textos
-  document.querySelectorAll('[id$="Text"], [id$="Title"], [id$="Label"]').forEach(el => {
+  // Atualiza todos os textos com IDs correspondentes
+  const els = document.querySelectorAll('[id]');
+  els.forEach(el => {
     const key = el.id;
     if (translations[lang][key]) el.innerText = translations[lang][key];
   });
 
-  // Atualiza título do jogador
   updateTitle();
 }
 
@@ -101,11 +102,7 @@ function loadProgress() {
 
       applyLanguage(language);
 
-      if (playerName && playerGender) {
-        updateTitle();
-        updateUI();
-        showScreen("game");
-      }
+      // Se tem progresso, vai pro game, mas checa termo primeiro
     } catch (e) {
       console.error("Erro ao carregar progresso:", e);
       showPopup("Progresso corrompido. Reiniciando...");
@@ -133,7 +130,7 @@ function saveProgress() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-// --------- RESET PROGRESSO ----------
+// --------- RESET ----------
 function resetProgress() {
   localStorage.removeItem(STORAGE_KEY);
   location.reload();
@@ -154,39 +151,30 @@ const popupMessage = document.createElement("div");
 popupMessage.className = "internal-popup";
 document.body.appendChild(popupMessage);
 
-// --------- POPUP INTERNO ----------
 function showPopup(text) {
   popupMessage.innerText = text;
   popupMessage.style.display = "flex";
-  setTimeout(() => {
-    popupMessage.style.display = "none";
-  }, 3000);
+  setTimeout(() => popupMessage.style.display = "none", 3000);
 }
 
-// --------- CONTROLE DE TELAS ----------
 function showScreen(screenName) {
   if (!screens[screenName]) {
-    showPopup("Erro: Tela " + screenName + " não encontrada.");
+    showPopup("Erro: Tela não encontrada.");
     return;
   }
   Object.values(screens).forEach(s => s.style.display = "none");
   screens[screenName].style.display = "flex";
 }
 
-// --------- TERMO DE RESPONSABILIDADE ----------
+// --------- TERMO ----------
 function showTermoModal() {
   const modal = document.getElementById("termoModal");
-  if (modal) {
-    modal.style.display = "flex";
-  }
-
+  if (modal) modal.style.display = "flex";
   const fecharBtn = document.getElementById("termoFecharBtn");
-  if (fecharBtn) {
-    fecharBtn.onclick = () => modal.style.display = "none";
-  }
+  if (fecharBtn) fecharBtn.onclick = () => modal.style.display = "none";
 }
 
-// --------- OUTROS MODAIS (denied, saude) ----------
+// --------- DENIED ----------
 function showDeniedModal() {
   const modal = document.getElementById("deniedModal");
   if (modal) modal.style.display = "flex";
@@ -197,6 +185,7 @@ function showDeniedModal() {
   };
 }
 
+// --------- SAÚDE ----------
 function showSaudeModal() {
   const modal = document.getElementById("saudeModal");
   if (modal) modal.style.display = "flex";
@@ -207,70 +196,23 @@ function showSaudeModal() {
   };
 }
 
-// --------- FLUXO INICIAL ----------
-document.getElementById("startLogoBtn").onclick = () => showScreen("name");
-
-document.getElementById("startGameBtn").onclick = () => {
-  playerName = document.getElementById("playerName").value.trim() || "Jogador";
-  playerGender = document.getElementById("playerGender").value;
-  saveProgress();
-  showScreen("account");
-};
-
-document.getElementById("guestBtn").onclick = () => showScreen("guestWarning");
-
-document.getElementById("guestContinueBtn").onclick = () => {
-  showScreen("game");
-  updateTitle();
-  showPopup("Modo visitante ativado. Progresso não será salvo.");
-  saveProgress();
-};
-
-document.getElementById("linkAccountBtn").onclick = () => showScreen("link");
-
-document.getElementById("emailSubmitBtn").onclick = () => {
-  const value = document.getElementById("emailInput").value.trim();
-
-  if (value === "MorningstarLabs2810") {
-    document.getElementById("adminAuthDiv").style.display = "flex";
-    showPopup("Passagem secreta reconhecida.");
-  } else {
-    const emailRegex = /\S+@\S+\.\S+/;
-    if (emailRegex.test(value)) {
-      showPopup("Conta comum vinculada.");
-      showScreen("game");
-      updateTitle();
-      saveProgress();
-    } else {
-      showDeniedModal();
-    }
-  }
-};
-
-document.getElementById("adminSubmitBtn").onclick = () => {
-  const password = document.getElementById("adminPassword").value.trim();
-
-  if (password === "Biel_2810") {
-    isArchitect = true;
-    playerName = "Morningstar";
-    showScreen("game");
-    updateTitle();
-    showPopup("Bem-vindo de volta Arquiteto Morningstar");
-    saveProgress();
-  } else {
-    showPopup("Senha incorreta.");
-  }
-};
-
-// --------- XP ----------
+// --------- XP COM LIMITE E CONTADOR ----------
 function addXP(amount) {
+  const now = Date.now();
+  if (now - lastTaskTime < 10000) { // 10 segundos entre tarefas
+    showPopup("O Arquiteto está de olho sempre, não tente o enganar!");
+    return;
+  }
+
+  lastTaskTime = now;
+
   const today = new Date().toDateString();
   if (today !== lastDay) {
     dailyXp = 0;
     lastDay = today;
   }
 
-  if (dailyXp + amount > 200) {
+  if (dailyXp + amount > 400) { // Limite dobrado: 400 XP/dia
     showSaudeModal();
     return;
   }
@@ -290,57 +232,19 @@ function addXP(amount) {
   saveProgress();
 }
 
-function updateRank() {
-  if (level >= 20) rank = "Rei";
-  else if (level >= 15) rank = "General";
-  else if (level >= 10) rank = "Capitão";
-  else if (level >= 5) rank = "Sargento";
-  else rank = "Soldado";
-}
-
-function updateUI() {
-  document.getElementById("xp").innerText = xp;
-  document.getElementById("xpNext").innerText = xpNext;
-  document.getElementById("level").innerText = level;
-  document.getElementById("rank").innerText = rank;
-  document.getElementById("xpFill").style.width = (xp / xpNext) * 100 + "%";
-}
-
-function updateTitle() {
-  let prefix = isArchitect ? "Sr." : (playerGender === "male" ? "Sr." : (playerGender === "female" ? "Sra." : ""));
-  document.getElementById("playerTitle").innerText = `SISTEMA ${rank} - ${prefix} ${playerName}`;
-}
-
-// --------- MENU ----------
-const menu = document.getElementById("menu");
-document.getElementById("menuBtn").onclick = () => {
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
-};
-
-// --------- THEME ----------
-document.getElementById("lightModeBtn").onclick = () => document.body.classList.add("light-mode"), document.body.classList.remove("dark-mode");
-document.getElementById("darkModeBtn").onclick = () => document.body.classList.add("dark-mode"), document.body.classList.remove("light-mode");
-document.getElementById("settingsLightModeBtn").onclick = () => document.body.classList.add("light-mode"), document.body.classList.remove("dark-mode");
-document.getElementById("settingsDarkModeBtn").onclick = () => document.body.classList.add("dark-mode"), document.body.classList.remove("light-mode");
-
-// --------- SETTINGS ----------
-function showSettings() {
-  showScreen("settings");
-  document.getElementById("languageSelect").value = language;
-  document.getElementById("languageSelect").onchange = () => {
-    applyLanguage(document.getElementById("languageSelect").value);
-    location.reload(); // recarrega pra aplicar em todos os textos
-  };
-}
+// ... (updateRank, updateUI, updateTitle, menu, theme, showSettings, etc. – mantenha como antes) ...
 
 // --------- INICIALIZAÇÃO ----------
 loadProgress();
 updateUI();
+applyLanguage(language);
 
-const termoMostrado = showTermoModal();
+showTermoModal(); // força checagem inicial
 
-if (!termoMostrado) {
-  showScreen("welcome");
+if (!playerName) {
+  showScreen("welcome"); // sempre mostra welcome se não tem nome
+} else {
+  showScreen("game");
 }
 
 // Bind pros botões de ver termo
