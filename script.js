@@ -225,12 +225,19 @@ function addXP(amount) {
   saveProgress();
 }
 
-function updateRank() {
-  if (level >= 20) rank = "Rei";
-  else if (level >= 15) rank = "General";
-  else if (level >= 10) rank = "Capitão";
-  else if (level >= 5) rank = "Sargento";
-  else rank = "Soldado";
+function updateUI() {
+  const xpEl = document.getElementById("xp");
+  const xpNextEl = document.getElementById("xpNext");
+  const levelEl = document.getElementById("level");
+  const rankEl = document.getElementById("rank");
+  const xpFillEl = document.getElementById("xpFill");
+
+  if (xpEl) xpEl.innerText = xp;
+  if (xpNextEl) xpNextEl.innerText = xpNext;
+  if (levelEl) levelEl.innerText = level;
+  if (rankEl) rankEl.innerText = rank;
+  if (xpFillEl && xpNext > 0) xpFillEl.style.width = (xp / xpNext * 100) + "%";
+}
 }
 
 function updateUI() {
@@ -339,17 +346,16 @@ document.getElementById("adminSubmitBtn").onclick = () => {
 
 // --------- INICIALIZAÇÃO ----------
 loadProgress();
-updateUI();
 applyLanguage(language);
 
+// Primeiro checa termo (se não aceito, mostra modal)
 showTermoModal();
 
+// Se não tem nome salvo, mostra welcome; senão tenta game
 if (!playerName) {
   showScreen("welcome");
 } else {
   showScreen("game");
+  updateUI(); // atualiza UI DEPOIS de mostrar a tela game
+  updateTitle();
 }
-
-document.querySelectorAll('.term-link, #viewTermBtn').forEach(el => el.onclick = showTermoModal);
-
-document.getElementById("backGameBtn").onclick = () => showScreen("game");
