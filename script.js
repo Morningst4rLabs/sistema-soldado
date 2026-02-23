@@ -13,7 +13,7 @@ let isArchitect = false;
 let language = "pt";
 let dailyXp = 0;
 let lastDay = new Date().toDateString();
-let lastTaskTime = 0; // timestamp da última tarefa
+let lastTaskTime = 0;
 
 // --------- TRADUÇÕES ----------
 const translations = {
@@ -73,7 +73,6 @@ function applyLanguage(lang) {
   language = lang;
   saveProgress();
 
-  // Atualiza todos os textos com IDs correspondentes
   const els = document.querySelectorAll('[id]');
   els.forEach(el => {
     const key = el.id;
@@ -101,8 +100,6 @@ function loadProgress() {
       lastDay = data.lastDay || new Date().toDateString();
 
       applyLanguage(language);
-
-      // Se tem progresso, vai pro game, mas checa termo primeiro
     } catch (e) {
       console.error("Erro ao carregar progresso:", e);
       showPopup("Progresso corrompido. Reiniciando...");
@@ -159,7 +156,7 @@ function showPopup(text) {
 
 function showScreen(screenName) {
   if (!screens[screenName]) {
-    showPopup("Erro: Tela não encontrada.");
+    showPopup("Erro: Tela " + screenName + " não encontrada.");
     return;
   }
   Object.values(screens).forEach(s => s.style.display = "none");
@@ -196,14 +193,13 @@ function showSaudeModal() {
   };
 }
 
-// --------- XP COM LIMITE E CONTADOR ----------
+// --------- XP ----------
 function addXP(amount) {
   const now = Date.now();
-  if (now - lastTaskTime < 10000) { // 10 segundos entre tarefas
+  if (now - lastTaskTime < 10000) {
     showPopup("O Arquiteto está de olho sempre, não tente o enganar!");
     return;
   }
-
   lastTaskTime = now;
 
   const today = new Date().toDateString();
@@ -212,7 +208,7 @@ function addXP(amount) {
     lastDay = today;
   }
 
-  if (dailyXp + amount > 400) { // Limite dobrado: 400 XP/dia
+  if (dailyXp + amount > 400) {
     showSaudeModal();
     return;
   }
@@ -232,20 +228,75 @@ function addXP(amount) {
   saveProgress();
 }
 
-// ... (updateRank, updateUI, updateTitle, menu, theme, showSettings, etc. – mantenha como antes) ...
+function updateRank() {
+  if (level >= 20) rank = "Rei";
+  else if (level >= 15) rank = "General";
+  else if (level >= 10) rank = "Capitão";
+  else if (level >= 5) rank = "Sargento";
+  else rank = "Soldado";
+}
+
+function updateUI() {
+  document.getElementById("xp").innerText = xp;
+  document.getElementById("xpNext").innerText = xpNext;
+  document.getElementById("level").innerText = level;
+  document.getElementById("rank").innerText = rank;
+  document.getElementById("xpFill").style.width = (xp / xpNext) * 100 + "%";
+}
+
+function updateTitle() {
+  let prefix = isArchitect ? "Sr." : (playerGender === "male" ? "Sr." : (playerGender === "female" ? "Sra." : ""));
+  document.getElementById("playerTitle").innerText = `SISTEMA ${rank} - ${prefix} ${playerName}`;
+}
+
+// --------- MENU ----------
+const menu = document.getElementById("menu");
+document.getElementById("menuBtn").onclick = () => {
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+};
+
+// --------- THEME ----------
+document.getElementById("lightModeBtn").onclick = () => {
+  document.body.classList.add("light-mode");
+  document.body.classList.remove("dark-mode");
+};
+document.getElementById("darkModeBtn").onclick = () => {
+  document.body.classList.add("dark-mode");
+  document.body.classList.remove("light-mode");
+};
+document.getElementById("settingsLightModeBtn").onclick = () => {
+  document.body.classList.add("light-mode");
+  document.body.classList.remove("dark-mode");
+};
+document.getElementById("settingsDarkModeBtn").onclick = () => {
+  document.body.classList.add("dark-mode");
+  document.body.classList.remove("light-mode");
+};
+
+// --------- SETTINGS ----------
+function showSettings() {
+  showScreen("settings");
+  document.getElementById("languageSelect").value = language;
+  document.getElementById("languageSelect").onchange = () => {
+    applyLanguage(document.getElementById("languageSelect").value);
+  };
+}
 
 // --------- INICIALIZAÇÃO ----------
 loadProgress();
 updateUI();
 applyLanguage(language);
 
-showTermoModal(); // força checagem inicial
+showTermoModal();
 
 if (!playerName) {
-  showScreen("welcome"); // sempre mostra welcome se não tem nome
+  showScreen("welcome");
 } else {
   showScreen("game");
 }
 
-// Bind pros botões de ver termo
+// Bind termo
 document.querySelectorAll('.term-link, #viewTermBtn').forEach(el => el.onclick = showTermoModal);
+
+// Bind voltar jogo em configs
+document.getElementById("backGameBtn").onclick = () => showScreen("game");
