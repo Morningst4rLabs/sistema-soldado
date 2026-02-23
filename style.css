@@ -204,6 +204,33 @@ button:hover {
     .logo {
         font-size: 36px;
     }
+    /* --------- MODO CLARO / ESCURO --------- */
+
+.dark-mode {
+  background: #0a0a0f;
+  color: #d4af37;
+}
+
+.light-mode {
+  background: #ffffff;
+  color: #b8860b;
+}
+
+/* --------- POPUP INTERNO --------- */
+
+.internal-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #111118;
+  color: #d4af37;
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(128,0,255,0.4);
+  display: none;
+  z-index: 999;
+  font-weight: bold;
+}
 
     .logo-btn {
         font-size: 40px;
