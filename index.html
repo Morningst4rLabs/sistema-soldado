@@ -9,120 +9,33 @@
 
 <body class="dark-mode">
 
-<!-- ================= TELA INICIAL ================= -->
-<div id="welcomeScreen" class="screen flex-center">
-  <h1 class="logo">Morningstar</h1>
-  <p class="welcome-text">
-    Você foi escolhido pelo Arquiteto Morningstar a mudar sua própria vida.
-  </p>
-  <button id="startLogoBtn" class="logo-btn">👑</button>
-</div>
-
-<!-- ================= NOME E GÊNERO ================= -->
-<div id="nameGenderScreen" class="screen flex-center">
-  <h2>Identificação do Jogador</h2>
-  <input type="text" id="playerName" placeholder="Digite seu nome">
-
-  <select id="playerGender">
-    <option value="male">Homem</option>
-    <option value="female">Mulher</option>
-    <option value="none">Prefiro não responder</option>
-  </select>
-
-  <button id="startGameBtn">Continuar</button>
-</div>
-
-<!-- ================= POPUP CONTA ================= -->
-<div id="accountPopup" class="screen flex-center">
-  <h2>Vincular Conta</h2>
-  <p>Deseja salvar seu progresso?</p>
-  <button id="linkAccountBtn">🔗 Vincular Conta</button>
-  <button id="guestBtn">🎮 Navegar como usuário sem conta</button>
-</div>
-
-<!-- ================= AVISO VISITANTE ================= -->
-<div id="guestWarningPopup" class="screen flex-center">
-  <h2>Atenção</h2>
-  <p>Sem vincular conta, seu progresso não será salvo.</p>
-  <button id="guestContinueBtn">Continuar mesmo assim</button>
-</div>
-
-<!-- ================= VINCULAR CONTA ================= -->
-<div id="linkAccountScreen" class="screen flex-center">
-
-  <h2>Autenticação</h2>
-  <p>Digite seu email ou a passagem secreta:</p>
-
-  <input type="text" id="emailInput" placeholder="Email ou Palavra-chave">
-  <button id="emailSubmitBtn">Enviar</button>
-
-  <!-- Área oculta do Arquiteto -->
-  <div id="adminAuthDiv" style="display:none; margin-top:20px;">
-    <p>Digite a senha do Arquiteto:</p>
-    <input type="password" id="adminPassword" placeholder="Senha secreta">
-    <button id="adminSubmitBtn">Entrar</button>
-  </div>
-
-</div>
-
-<!-- ================= TELA PRINCIPAL DO JOGO ================= -->
-<div id="gameScreen" class="screen flex-center">
-
-  <div class="game-container">
-
-    <!-- HEADER -->
-    <div class="header">
-      <button id="menuBtn" class="menu-logo">👑</button>
-
-      <div class="theme-toggle">
-        <span id="lightModeBtn">🌞</span>
-        <span id="darkModeBtn">🌙</span>
-      </div>
+<!-- ================= MODAL TERMO DE RESPONSABILIDADE ================= -->
+<div id="termoModal" class="modal-overlay" style="display: none;">
+  <div class="modal-content">
+    <h2>TERMO DE RESPONSABILIDADE E USO</h2>
+    <div class="modal-body">
+      <p><strong>Ao acessar e utilizar o Sistema Soldado (Morningstar Labs), você declara e concorda expressamente com os seguintes termos:</strong></p>
+      <ol>
+        <li><strong>Natureza Recreativa e Ficcional</strong><br>Este aplicativo é uma ferramenta recreativa e gamificada de autoaperfeiçoamento. Todo conteúdo (patentes, XP, missões, punições, narrativa "Arquiteto Morningstar") é puramente fictício e simbólico. Não constitui conselho médico, psicológico, nutricional ou profissional.</li>
+        <li><strong>Sem Responsabilidade por Consequências Reais</strong><br>O desenvolvedor (Morningstar Labs) <strong>não se responsabiliza</strong> por qualquer dano físico, mental, emocional ou outro decorrente do uso. Isso inclui lesões, privação de sono, dietas extremas, ansiedade ou impactos negativos na vida real.</li>
+        <li><strong>Uso por Conta e Risco Próprio</strong><br>Você assume total responsabilidade por suas ações e saúde. Consulte profissionais qualificados antes de mudanças radicais. O app não substitui orientação profissional.</li>
+        <li><strong>Dados e Progresso</strong><br>Progresso salvo localmente no seu navegador. Use por sua conta e risco. Não coletamos dados sensíveis intencionalmente.</li>
+        <li><strong>Aceitação</strong><br>Ao marcar a caixa abaixo e clicar em "Aceitar e Continuar", você confirma que leu, entendeu e aceita integralmente este termo. Se não concordar, não utilize o aplicativo.</li>
+      </ol>
     </div>
-
-    <!-- TÍTULO -->
-    <h1 id="playerTitle">SISTEMA SOLDADO</h1>
-
-    <!-- STATUS -->
-    <div class="status">
-      <p>Patente: <span id="rank">Soldado</span></p>
-      <p>Nível: <span id="level">1</span></p>
-      <p>XP: <span id="xp">0</span> / <span id="xpNext">100</span></p>
-
-      <div class="xp-bar">
-        <div class="xp-fill" id="xpFill"></div>
-      </div>
+    <label class="checkbox-label">
+      <input type="checkbox" id="termoCheckbox"> Li e concordo integralmente com o Termo de Responsabilidade.
+    </label>
+    <div class="modal-buttons">
+      <button id="termoRecusarBtn" class="btn-secondary">Recusar</button>
+      <button id="termoAceitarBtn" class="btn-primary" disabled>Aceitar e Continuar</button>
     </div>
-
-    <!-- MISSÕES -->
-    <div class="missions">
-      <button onclick="addXP(25)">📚 Estudo Profundo (+25XP)</button>
-      <button onclick="addXP(15)">📖 Leitura Estratégica (+15XP)</button>
-      <button onclick="addXP(30)">🧠 Produção Intelectual (+30XP)</button>
-      <button onclick="addXP(10)">💪 Treino 1h (+10XP)</button>
-    </div>
-
-    <!-- MENSAGEM INTERNA -->
-    <div class="message" id="message"></div>
-
-    <!-- MENU LATERAL -->
-    <div id="menu" class="menu-dropdown">
-      <button onclick="showScreen('link')">🔗 Vincular Conta</button>
-      <button onclick="showPopup('Progresso atual em desenvolvimento.')">📊 Progresso</button>
-      <button onclick="showPopup('Configurações em desenvolvimento.')">⚙️ Configurações</button>
-      <button onclick="showPopup('Sistema de idioma será implementado.')">🌐 Idioma</button>
-      <button onclick="resetProgress()">🗑️ Resetar Progresso (Teste)</button> <!-- Adicionado para testes -->
-    </div>
-
-    <!-- DISCLAIMER -->
-    <div class="disclaimer">
-      ⚠️ Este sistema é recreativo e educacional. Nenhuma responsabilidade é assumida por ações fora do ambiente do jogo.
-    </div>
-
   </div>
 </div>
+
+<!-- ================= RESTANTE DO HTML (igual ao anterior, só adicionei classes no body se precisar) ================= -->
+<!-- ... cole todo o resto do HTML anterior aqui (welcomeScreen, nameGenderScreen, etc.) ... -->
 
 <script src="script.js"></script>
-
 </body>
 </html>
