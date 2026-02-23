@@ -146,7 +146,7 @@ function showDeniedModal() {
   if (voltarBtn) {
     voltarBtn.onclick = () => {
       modal.style.display = "none";
-      showPopup("Continue servindo, recruta.");
+      showPopup("Tentativa de entrar em área restrita registrada.");
     };
   }
 }
@@ -185,10 +185,16 @@ document.getElementById("emailSubmitBtn").onclick = () => {
     document.getElementById("adminAuthDiv").style.display = "flex";
     showPopup("Passagem secreta reconhecida.");
   } else {
-    showPopup("Conta comum vinculada.");
-    showScreen("game");
-    updateTitle();
-    saveProgress();
+    // Verificação simples de email válido (contém @ e .)
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (emailRegex.test(value)) {
+      showPopup("Conta comum vinculada.");
+      showScreen("game");
+      updateTitle();
+      saveProgress();
+    } else {
+      showDeniedModal();  // Denied se email inválido ou palavra-chave errada
+    }
   }
 };
 
@@ -203,7 +209,7 @@ document.getElementById("adminSubmitBtn").onclick = () => {
     showPopup("Bem-vindo de volta Arquiteto Morningstar");
     saveProgress();
   } else {
-    showDeniedModal();  // Modal custom de negado
+    showPopup("Senha incorreta.");
   }
 };
 
