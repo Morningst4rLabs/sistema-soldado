@@ -4,43 +4,63 @@
 const TERMO_KEY = "morningstarTermoAceito_v1";
 
 function showTermoModal() {
+  // Sempre checa, mas força show se não aceito
   const aceito = localStorage.getItem(TERMO_KEY) === "true";
   if (aceito) {
-    // Já aceitou → continua fluxo normal
-    return;
+    showPopup("Termos já aceitos. Bem-vindo de volta, Soldado.");
+    return false; // não mostra modal
   }
 
-  document.getElementById("termoModal").style.display = "flex";
+  // Mostra o modal
+  const modal = document.getElementById("termoModal");
+  if (modal) {
+    modal.style.display = "flex";
+  } else {
+    console.error("Elemento termoModal não encontrado no DOM!");
+    showPopup("Erro interno: Termo não carregado. Contate o Arquiteto.");
+  }
 
   const checkbox = document.getElementById("termoCheckbox");
   const aceitarBtn = document.getElementById("termoAceitarBtn");
   const recusarBtn = document.getElementById("termoRecusarBtn");
 
-  checkbox.onchange = () => {
-    aceitarBtn.disabled = !checkbox.checked;
-  };
+  if (checkbox && aceitarBtn && recusarBtn) {
+    aceitarBtn.disabled = true; // garante inicial cinza
 
-  aceitarBtn.onclick = () => {
-    localStorage.setItem(TERMO_KEY, "true");
-    document.getElementById("termoModal").style.display = "none";
-    showPopup("Termos aceitos. Bem-vindo à Legião, Soldado.");
-    // Continua pro fluxo (welcome já tá visível ou chama showScreen se precisar)
-  };
+    checkbox.onchange = () => {
+      aceitarBtn.disabled = !checkbox.checked;
+    };
 
-  recusarBtn.onclick = () => {
-    showPopup("Você precisa aceitar os termos para prosseguir.");
-    // Pode esconder tudo ou voltar pro welcome
-    showScreen("welcome");
-    document.getElementById("termoModal").style.display = "none";
-  };
+    aceitarBtn.onclick = () => {
+      localStorage.setItem(TERMO_KEY, "true");
+      modal.style.display = "none";
+      showPopup("Termos aceitos. Agora você é parte da Legião.");
+      // Continua fluxo (já mostra welcome se não tinha)
+      if (!playerName) showScreen("welcome"); // força se necessário
+    };
+
+    recusarBtn.onclick = () => {
+      modal.style.display = "none";
+      showPopup("Você recusou os termos. Acesso negado até aceitar.");
+      // Pode bloquear ou resetar
+      localStorage.clear(); // opcional: limpa tudo se recusar
+      showScreen("welcome");
+    };
+  } else {
+    console.error("Elementos do termo não encontrados!");
+  }
+
+  return true; // modal foi mostrado
 }
 
-// --------- INICIALIZAÇÃO (atualizada) ----------
+// --------- INICIALIZAÇÃO ----------
 loadProgress();
 updateUI();
-showTermoModal();  // <--- Chama primeiro pra checar termo
-if (localStorage.getItem(TERMO_KEY) !== "true") {
-  // Se não aceitou, modal já tá mostrando – não mostra welcome ainda
-} else {
+
+// Primeiro checa e mostra termo se necessário
+const termoMostrado = showTermoModal();
+
+// Só mostra welcome se termo já aceito OU não mostrou modal
+if (!termoMostrado) {
   showScreen("welcome");
 }
