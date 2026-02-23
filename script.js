@@ -225,6 +225,14 @@ function addXP(amount) {
   saveProgress();
 }
 
+function updateRank() {
+  if (level >= 20) rank = "Rei";
+  else if (level >= 15) rank = "General";
+  else if (level >= 10) rank = "Capitão";
+  else if (level >= 5) rank = "Sargento";
+  else rank = "Soldado";
+}
+
 function updateUI() {
   const xpEl = document.getElementById("xp");
   const xpNextEl = document.getElementById("xpNext");
@@ -237,21 +245,6 @@ function updateUI() {
   if (levelEl) levelEl.innerText = level;
   if (rankEl) rankEl.innerText = rank;
   if (xpFillEl && xpNext > 0) xpFillEl.style.width = (xp / xpNext * 100) + "%";
-}
-}
-
-function updateUI() {
-  const xpEl = document.getElementById("xp");
-  const xpNextEl = document.getElementById("xpNext");
-  const levelEl = document.getElementById("level");
-  const rankEl = document.getElementById("rank");
-  const xpFillEl = document.getElementById("xpFill");
-
-  if (xpEl) xpEl.innerText = xp;
-  if (xpNextEl) xpNextEl.innerText = xpNext;
-  if (levelEl) levelEl.innerText = level;
-  if (rankEl) rankEl.innerText = rank;
-  if (xpFillEl) xpFillEl.style.width = (xp / xpNext) * 100 + "%";
 }
 
 function updateTitle() {
@@ -304,6 +297,7 @@ document.getElementById("guestBtn").onclick = () => showScreen("guestWarning");
 document.getElementById("guestContinueBtn").onclick = () => {
   showScreen("game");
   updateTitle();
+  updateUI();
   showPopup("Modo visitante ativado. Progresso não será salvo.");
   saveProgress();
 };
@@ -322,6 +316,7 @@ document.getElementById("emailSubmitBtn").onclick = () => {
       showPopup("Conta comum vinculada.");
       showScreen("game");
       updateTitle();
+      updateUI();
       saveProgress();
     } else {
       showDeniedModal();
@@ -337,6 +332,7 @@ document.getElementById("adminSubmitBtn").onclick = () => {
     playerName = "Morningstar";
     showScreen("game");
     updateTitle();
+    updateUI();
     showPopup("Bem-vindo de volta Arquiteto Morningstar");
     saveProgress();
   } else {
@@ -348,14 +344,24 @@ document.getElementById("adminSubmitBtn").onclick = () => {
 loadProgress();
 applyLanguage(language);
 
-// Primeiro checa termo (se não aceito, mostra modal)
+// Força checagem do termo
 showTermoModal();
 
-// Se não tem nome salvo, mostra welcome; senão tenta game
+// Se não tem nome, mostra welcome; senão game com update
 if (!playerName) {
   showScreen("welcome");
 } else {
   showScreen("game");
-  updateUI(); // atualiza UI DEPOIS de mostrar a tela game
+  updateUI();
   updateTitle();
 }
+
+// Bind termo
+document.querySelectorAll('.term-link, #viewTermBtn').forEach(el => el.onclick = showTermoModal);
+
+// Bind voltar jogo
+document.getElementById("backGameBtn").onclick = () => {
+  showScreen("game");
+  updateUI();
+  updateTitle();
+};
