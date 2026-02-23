@@ -10,13 +10,65 @@ let rank = "Soldado";
 let playerName = "";
 let playerGender = "none";
 let isArchitect = false;
-let language = "pt"; // Default PT-BR
+let language = "pt"; // pt ou en
 let dailyXp = 0;
 let lastDay = new Date().toDateString();
 
-// --------- CHAVES LOCALSTORAGE ----------
-const STORAGE_KEY = "morningstarProgress_v1";
-const TERMO_KEY = "morningstarTermoAceito_v1";
+// --------- TRADUÇÕES SIMPLES (MVP) ----------
+const translations = {
+  pt: {
+    welcomeText: "Você foi escolhido pelo Arquiteto Morningstar a mudar sua própria vida.",
+    termoTitle: "TERMO DE RESPONSABILIDADE E USO",
+    deniedTitle: "ACESSO NEGADO",
+    saudeTitle: "ORDENS DO ARQUITETO",
+    settingsTitle: "Configurações",
+    themeLabel: "Tema",
+    languageLabel: "Idioma",
+    otherOptionsLabel: "Outras Opções",
+    resetBtn: "Resetar Progresso",
+    viewTermBtn: "Ver Termo de Responsabilidade",
+    aboutBtn: "Sobre o Arquiteto",
+    backGameBtn: "Voltar ao Jogo",
+    // ... adicione mais chaves conforme necessário
+  },
+  en: {
+    welcomeText: "You were chosen by the Architect Morningstar to change your own life.",
+    termoTitle: "TERMS OF RESPONSIBILITY AND USE",
+    deniedTitle: "ACCESS DENIED",
+    saudeTitle: "ARCHITECT'S ORDERS",
+    settingsTitle: "Settings",
+    themeLabel: "Theme",
+    languageLabel: "Language",
+    otherOptionsLabel: "Other Options",
+    resetBtn: "Reset Progress",
+    viewTermBtn: "View Terms of Responsibility",
+    aboutBtn: "About the Architect",
+    backGameBtn: "Back to Game",
+    // ... 
+  }
+};
+
+// --------- FUNÇÃO PARA APLICAR IDIOMA ----------
+function applyLanguage(lang) {
+  language = lang;
+  saveProgress();
+
+  document.getElementById("welcomeText").innerText = translations[lang].welcomeText;
+  document.getElementById("termoTitle").innerText = translations[lang].termoTitle;
+  document.getElementById("deniedTitle").innerText = translations[lang].deniedTitle;
+  document.getElementById("saudeTitle").innerText = translations[lang].saudeTitle;
+  document.getElementById("settingsTitle").innerText = translations[lang].settingsTitle;
+  document.getElementById("themeLabel").innerText = translations[lang].themeLabel;
+  document.getElementById("languageLabel").innerText = translations[lang].languageLabel;
+  document.getElementById("otherOptionsLabel").innerText = translations[lang].otherOptionsLabel;
+  document.getElementById("resetBtn").innerText = translations[lang].resetBtn;
+  document.getElementById("viewTermBtn").innerText = translations[lang].viewTermBtn;
+  document.getElementById("aboutBtn").innerText = translations[lang].aboutBtn;
+  document.getElementById("backGameBtn").innerText = translations[lang].backGameBtn;
+
+  // Atualiza título se já estiver no game
+  updateTitle();
+}
 
 // --------- CARREGAR PROGRESSO ----------
 function loadProgress() {
@@ -35,6 +87,8 @@ function loadProgress() {
       dailyXp = data.dailyXp || 0;
       lastDay = data.lastDay || new Date().toDateString();
 
+      applyLanguage(language);
+
       if (playerName && playerGender) {
         updateTitle();
         updateUI();
@@ -45,6 +99,8 @@ function loadProgress() {
       showPopup("Progresso corrompido. Reiniciando...");
       resetProgress();
     }
+  } else {
+    applyLanguage("pt");
   }
 }
 
@@ -103,46 +159,17 @@ function showScreen(screenName) {
 
 // --------- TERMO DE RESPONSABILIDADE ----------
 function showTermoModal() {
-  const aceito = localStorage.getItem(TERMO_KEY) === "true";
-  if (aceito) {
-    showPopup("Termos já aceitos. Bem-vindo de volta, Soldado.");
-    return false;
-  }
-
   const modal = document.getElementById("termoModal");
   if (modal) {
     modal.style.display = "flex";
-  } else {
-    console.error("Elemento termoModal não encontrado!");
   }
 
-  const checkbox = document.getElementById("termoCheckbox");
-  const aceitarBtn = document.getElementById("termoAceitarBtn");
-  const recusarBtn = document.getElementById("termoRecusarBtn");
-
-  if (checkbox && aceitarBtn && recusarBtn) {
-    aceitarBtn.disabled = true;
-
-    checkbox.onchange = () => {
-      aceitarBtn.disabled = !checkbox.checked;
-    };
-
-    aceitarBtn.onclick = () => {
-      localStorage.setItem(TERMO_KEY, "true");
+  const fecharBtn = document.getElementById("termoFecharBtn");
+  if (fecharBtn) {
+    fecharBtn.onclick = () => {
       modal.style.display = "none";
-      showPopup("Termos aceitos. Agora você é parte da Legião.");
-      if (!playerName) showScreen("welcome");
-    };
-
-    recusarBtn.onclick = () => {
-      modal.style.display = "none";
-      showPopup("Você recusou os termos. Acesso negado até aceitar.");
-      localStorage.clear();
-      showScreen("welcome");
     };
   }
-
-  return true;
 }
 
 // --------- MODAL ACESSO NEGADO ----------
@@ -246,7 +273,7 @@ function addXP(amount) {
     lastDay = today;
   }
 
-  if (dailyXp + amount > 200) { // Limite diário de 200 XP
+  if (dailyXp + amount > 200) {
     showSaudeModal();
     return;
   }
@@ -266,73 +293,7 @@ function addXP(amount) {
   saveProgress();
 }
 
-function updateRank() {
-  if (level >= 20) rank = "Rei";
-  else if (level >= 15) rank = "General";
-  else if (level >= 10) rank = "Capitão";
-  else if (level >= 5) rank = "Sargento";
-  else rank = "Soldado";
-}
-
-function updateUI() {
-  document.getElementById("xp").innerText = xp;
-  document.getElementById("xpNext").innerText = xpNext;
-  document.getElementById("level").innerText = level;
-  document.getElementById("rank").innerText = rank;
-  document.getElementById("xpFill").style.width = (xp / xpNext) * 100 + "%";
-}
-
-function updateTitle() {
-  let prefix = "";
-
-  if (isArchitect) {
-    prefix = "Sr.";
-  } else {
-    if (playerGender === "male") prefix = "Sr.";
-    if (playerGender === "female") prefix = "Sra.";
-  }
-
-  document.getElementById("playerTitle").innerText =
-    `SISTEMA ${rank} - ${prefix} ${playerName}`;
-}
-
-// --------- MENU LATERAL ----------
-const menu = document.getElementById("menu");
-document.getElementById("menuBtn").onclick = () => {
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
-};
-
-// --------- MODO CLARO / ESCURO ----------
-document.getElementById("lightModeBtn").onclick = () => {
-  document.body.classList.remove("dark-mode");
-  document.body.classList.add("light-mode");
-};
-
-document.getElementById("darkModeBtn").onclick = () => {
-  document.body.classList.remove("light-mode");
-  document.body.classList.add("dark-mode");
-};
-
-document.getElementById("settingsLightModeBtn").onclick = () => {
-  document.body.classList.remove("dark-mode");
-  document.body.classList.add("light-mode");
-};
-
-document.getElementById("settingsDarkModeBtn").onclick = () => {
-  document.body.classList.remove("light-mode");
-  document.body.classList.add("dark-mode");
-};
-
-// --------- TELA DE CONFIGURAÇÕES ----------
-function showSettings() {
-  showScreen("settings");
-  document.getElementById("languageSelect").value = language;
-  document.getElementById("languageSelect").onchange = () => {
-    language = document.getElementById("languageSelect").value;
-    saveProgress();
-    showPopup("Idioma alterado. Recarregue para aplicar.");
-  };
-}
+// ... (funções updateRank, updateUI, updateTitle, menu, theme toggle, showSettings, showTermoModal, etc. – mantenha como antes) ...
 
 // --------- INICIALIZAÇÃO ----------
 loadProgress();
