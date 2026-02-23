@@ -11,6 +11,57 @@ let playerName = "";
 let playerGender = "none";
 let isArchitect = false;
 
+// --------- CHAVE LOCALSTORAGE ----------
+const STORAGE_KEY = "morningstarProgress_v1";
+
+// --------- CARREGAR PROGRESSO AO INICIAR ----------
+function loadProgress() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      xp = data.xp || 0;
+      level = data.level || 1;
+      xpNext = data.xpNext || 100;
+      rank = data.rank || "Soldado";
+      playerName = data.playerName || "";
+      playerGender = data.playerGender || "none";
+      isArchitect = data.isArchitect || false;
+
+      // Se tinha nome salvo, pula direto pro game
+      if (playerName && playerGender) {
+        updateTitle();
+        updateUI();
+        showScreen("game");
+      }
+    } catch (e) {
+      console.error("Erro ao carregar progresso:", e);
+      showPopup("Progresso corrompido. Reiniciando...");
+      resetProgress();
+    }
+  }
+}
+
+// --------- SALVAR PROGRESSO ----------
+function saveProgress() {
+  const data = {
+    xp,
+    level,
+    xpNext,
+    rank,
+    playerName,
+    playerGender,
+    isArchitect
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+// --------- RESET PROGRESSO (para testes) ----------
+function resetProgress() {
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();  // recarrega a página limpa
+}
+
 // --------- ELEMENTOS ----------
 const screens = {
   welcome: document.getElementById("welcomeScreen"),
@@ -48,6 +99,7 @@ document.getElementById("startLogoBtn").onclick = () => {
 document.getElementById("startGameBtn").onclick = () => {
   playerName = document.getElementById("playerName").value.trim() || "Jogador";
   playerGender = document.getElementById("playerGender").value;
+  saveProgress();
   showScreen("account");
 };
 
@@ -60,6 +112,7 @@ document.getElementById("guestContinueBtn").onclick = () => {
   showScreen("game");
   updateTitle();
   showPopup("Modo visitante ativado. Progresso não será salvo.");
+  saveProgress();
 };
 
 // --------- VINCULAR CONTA ----------
@@ -78,6 +131,7 @@ document.getElementById("emailSubmitBtn").onclick = () => {
     showPopup("Conta comum vinculada.");
     showScreen("game");
     updateTitle();
+    saveProgress();
   }
 };
 
@@ -91,6 +145,7 @@ document.getElementById("adminSubmitBtn").onclick = () => {
     showScreen("game");
     updateTitle();
     showPopup("Bem-vindo de volta Arquiteto Morningstar");
+    saveProgress();
   } else {
     showPopup("Senha incorreta.");
   }
@@ -109,6 +164,7 @@ function addXP(amount) {
   }
 
   updateUI();
+  saveProgress();
 }
 
 function updateRank() {
@@ -160,5 +216,6 @@ document.getElementById("darkModeBtn").onclick = () => {
 };
 
 // --------- INICIALIZAÇÃO ----------
-showScreen("welcome");
+loadProgress();
 updateUI();
+showScreen("welcome");
