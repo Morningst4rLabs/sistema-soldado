@@ -2,7 +2,7 @@
 // MORNINGSTAR - FASE NECROMANCER FINAL
 // ======================================
 
-// --------- CONSTANTES (primeiro, antes de tudo) ----------
+// --------- CONSTANTES (sempre no topo!) ----------
 const STORAGE_KEY = "morningstarProgress_v1";
 const TERMO_KEY = "morningstarTermoAceito_v1";
 
@@ -71,7 +71,7 @@ let isArchitect = false;
 let language = "pt";
 let dailyXp = 0;
 let lastDay = new Date().toDateString();
-let lastTaskTime = 0; // timestamp da última tarefa
+let lastTaskTime = 0;
 
 // --------- FUNÇÕES ----------
 function applyLanguage(lang) {
@@ -193,11 +193,10 @@ function showSaudeModal() {
 
 function addXP(amount) {
   const now = Date.now();
-  if (now - lastTaskTime < 10000) { // 10 segundos entre tarefas
+  if (now - lastTaskTime < 10000) {
     showPopup("O Arquiteto está de olho sempre, não tente o enganar!");
     return;
   }
-
   lastTaskTime = now;
 
   const today = new Date().toDateString();
@@ -206,7 +205,7 @@ function addXP(amount) {
     lastDay = today;
   }
 
-  if (dailyXp + amount > 400) { // Dobrado: 400 XP/dia
+  if (dailyXp + amount > 400) {
     showSaudeModal();
     return;
   }
@@ -247,13 +246,11 @@ function updateTitle() {
   document.getElementById("playerTitle").innerText = `SISTEMA ${rank} - ${prefix} ${playerName}`;
 }
 
-// --------- MENU LATERAL ----------
 const menu = document.getElementById("menu");
 document.getElementById("menuBtn").onclick = () => {
   menu.style.display = menu.style.display === "block" ? "none" : "block";
 };
 
-// --------- THEME ----------
 document.getElementById("lightModeBtn").onclick = () => {
   document.body.classList.add("light-mode");
   document.body.classList.remove("dark-mode");
@@ -271,7 +268,6 @@ document.getElementById("settingsDarkModeBtn").onclick = () => {
   document.body.classList.remove("light-mode");
 };
 
-// --------- SETTINGS ----------
 function showSettings() {
   showScreen("settings");
   document.getElementById("languageSelect").value = language;
@@ -280,7 +276,6 @@ function showSettings() {
   };
 }
 
-// --------- EVENT LISTENERS ----------
 document.getElementById("startLogoBtn").onclick = () => showScreen("name");
 
 document.getElementById("startGameBtn").onclick = () => {
@@ -340,18 +335,14 @@ loadProgress();
 updateUI();
 applyLanguage(language);
 
-// Força checagem do termo
 showTermoModal();
 
-// Se não tem nome, mostra welcome; senão game
 if (!playerName) {
   showScreen("welcome");
 } else {
   showScreen("game");
 }
 
-// Bind termo
 document.querySelectorAll('.term-link, #viewTermBtn').forEach(el => el.onclick = showTermoModal);
 
-// Bind voltar jogo
 document.getElementById("backGameBtn").onclick = () => showScreen("game");
