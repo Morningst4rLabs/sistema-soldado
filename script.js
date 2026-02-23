@@ -10,6 +10,9 @@ let rank = "Soldado";
 let playerName = "";
 let playerGender = "none";
 let isArchitect = false;
+let language = "pt"; // Default PT-BR
+let dailyXp = 0;
+let lastDay = new Date().toDateString();
 
 // --------- CHAVES LOCALSTORAGE ----------
 const STORAGE_KEY = "morningstarProgress_v1";
@@ -28,6 +31,9 @@ function loadProgress() {
       playerName = data.playerName || "";
       playerGender = data.playerGender || "none";
       isArchitect = data.isArchitect || false;
+      language = data.language || "pt";
+      dailyXp = data.dailyXp || 0;
+      lastDay = data.lastDay || new Date().toDateString();
 
       if (playerName && playerGender) {
         updateTitle();
@@ -51,7 +57,10 @@ function saveProgress() {
     rank,
     playerName,
     playerGender,
-    isArchitect
+    isArchitect,
+    language,
+    dailyXp,
+    lastDay
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
@@ -69,7 +78,8 @@ const screens = {
   account: document.getElementById("accountPopup"),
   guestWarning: document.getElementById("guestWarningPopup"),
   link: document.getElementById("linkAccountScreen"),
-  game: document.getElementById("gameScreen")
+  game: document.getElementById("gameScreen"),
+  settings: document.getElementById("settingsScreen")
 };
 
 const popupMessage = document.createElement("div");
@@ -151,6 +161,22 @@ function showDeniedModal() {
   }
 }
 
+// --------- MODAL SAÚDE ----------
+function showSaudeModal() {
+  const modal = document.getElementById("saudeModal");
+  if (modal) {
+    modal.style.display = "flex";
+  }
+
+  const voltarBtn = document.getElementById("saudeVoltarBtn");
+  if (voltarBtn) {
+    voltarBtn.onclick = () => {
+      modal.style.display = "none";
+      showPopup("Descanso ordenado. Volte amanhã.");
+    };
+  }
+}
+
 // --------- FLUXO INICIAL ----------
 document.getElementById("startLogoBtn").onclick = () => {
   showScreen("name");
@@ -185,7 +211,6 @@ document.getElementById("emailSubmitBtn").onclick = () => {
     document.getElementById("adminAuthDiv").style.display = "flex";
     showPopup("Passagem secreta reconhecida.");
   } else {
-    // Verificação simples de email válido (contém @ e .)
     const emailRegex = /\S+@\S+\.\S+/;
     if (emailRegex.test(value)) {
       showPopup("Conta comum vinculada.");
@@ -193,7 +218,7 @@ document.getElementById("emailSubmitBtn").onclick = () => {
       updateTitle();
       saveProgress();
     } else {
-      showDeniedModal();  // Denied se email inválido ou palavra-chave errada
+      showDeniedModal();
     }
   }
 };
@@ -215,7 +240,19 @@ document.getElementById("adminSubmitBtn").onclick = () => {
 
 // --------- SISTEMA DE XP ----------
 function addXP(amount) {
+  const today = new Date().toDateString();
+  if (today !== lastDay) {
+    dailyXp = 0;
+    lastDay = today;
+  }
+
+  if (dailyXp + amount > 200) { // Limite diário de 200 XP
+    showSaudeModal();
+    return;
+  }
+
   xp += amount;
+  dailyXp += amount;
 
   while (xp >= xpNext) {
     xp -= xpNext;
@@ -275,6 +312,27 @@ document.getElementById("darkModeBtn").onclick = () => {
   document.body.classList.remove("light-mode");
   document.body.classList.add("dark-mode");
 };
+
+document.getElementById("settingsLightModeBtn").onclick = () => {
+  document.body.classList.remove("dark-mode");
+  document.body.classList.add("light-mode");
+};
+
+document.getElementById("settingsDarkModeBtn").onclick = () => {
+  document.body.classList.remove("light-mode");
+  document.body.classList.add("dark-mode");
+};
+
+// --------- TELA DE CONFIGURAÇÕES ----------
+function showSettings() {
+  showScreen("settings");
+  document.getElementById("languageSelect").value = language;
+  document.getElementById("languageSelect").onchange = () => {
+    language = document.getElementById("languageSelect").value;
+    saveProgress();
+    showPopup("Idioma alterado. Recarregue para aplicar.");
+  };
+}
 
 // --------- INICIALIZAÇÃO ----------
 loadProgress();
