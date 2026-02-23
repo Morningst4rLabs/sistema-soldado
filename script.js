@@ -11,11 +11,11 @@ let playerName = "";
 let playerGender = "none";
 let isArchitect = false;
 
-// --------- CHAVE LOCALSTORAGE ----------
+// --------- CHAVES LOCALSTORAGE ----------
 const STORAGE_KEY = "morningstarProgress_v1";
 const TERMO_KEY = "morningstarTermoAceito_v1";
 
-// --------- CARREGAR PROGRESSO AO INICIAR ----------
+// --------- CARREGAR PROGRESSO ----------
 function loadProgress() {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
@@ -76,7 +76,7 @@ const popupMessage = document.createElement("div");
 popupMessage.className = "internal-popup";
 document.body.appendChild(popupMessage);
 
-// --------- FUNÇÃO POPUP INTERNO ----------
+// --------- POPUP INTERNO ----------
 function showPopup(text) {
   popupMessage.innerText = text;
   popupMessage.style.display = "flex";
@@ -104,7 +104,6 @@ function showTermoModal() {
     modal.style.display = "flex";
   } else {
     console.error("Elemento termoModal não encontrado!");
-    showPopup("Erro: Termo não carregado.");
   }
 
   const checkbox = document.getElementById("termoCheckbox");
@@ -131,11 +130,25 @@ function showTermoModal() {
       localStorage.clear();
       showScreen("welcome");
     };
-  } else {
-    console.error("Elementos do termo não encontrados!");
   }
 
   return true;
+}
+
+// --------- MODAL ACESSO NEGADO ----------
+function showDeniedModal() {
+  const modal = document.getElementById("deniedModal");
+  if (modal) {
+    modal.style.display = "flex";
+  }
+
+  const voltarBtn = document.getElementById("deniedVoltarBtn");
+  if (voltarBtn) {
+    voltarBtn.onclick = () => {
+      modal.style.display = "none";
+      showPopup("Continue servindo, recruta.");
+    };
+  }
 }
 
 // --------- FLUXO INICIAL ----------
@@ -190,7 +203,7 @@ document.getElementById("adminSubmitBtn").onclick = () => {
     showPopup("Bem-vindo de volta Arquiteto Morningstar");
     saveProgress();
   } else {
-    showPopup("Senha incorreta.");
+    showDeniedModal();  // Modal custom de negado
   }
 };
 
