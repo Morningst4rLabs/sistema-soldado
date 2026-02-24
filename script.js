@@ -13,6 +13,7 @@ const translations = {
     termoTitle: "TERMO DE RESPONSABILIDADE E USO",
     deniedTitle: "ACESSO NEGADO",
     saudeTitle: "ORDENS DO ARQUITETO",
+    punicaoTitle: "INSUBORDINAÇÃO DETECTADA",
     settingsTitle: "Configurações",
     themeLabel: "Tema",
     languageLabel: "Idioma",
@@ -38,6 +39,7 @@ const translations = {
     termoTitle: "TERMS OF RESPONSIBILITY AND USE",
     deniedTitle: "ACCESS DENIED",
     saudeTitle: "ARCHITECT'S ORDERS",
+    punicaoTitle: "INSUBORDINATION DETECTED",
     settingsTitle: "Settings",
     themeLabel: "Theme",
     languageLabel: "Language",
@@ -72,6 +74,7 @@ let language = "pt";
 let dailyXp = 0;
 let lastDay = new Date().toDateString();
 let lastTaskTime = 0;
+let restrictedAttempts = 0;
 
 // --------- FUNÇÕES ----------
 function applyLanguage(lang) {
@@ -102,6 +105,7 @@ function loadProgress() {
       language = data.language || "pt";
       dailyXp = data.dailyXp || 0;
       lastDay = data.lastDay || new Date().toDateString();
+      restrictedAttempts = data.restrictedAttempts || 0;
 
       applyLanguage(language);
     } catch (e) {
@@ -125,7 +129,8 @@ function saveProgress() {
     isArchitect,
     language,
     dailyXp,
-    lastDay
+    lastDay,
+    restrictedAttempts
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
@@ -177,7 +182,32 @@ function showDeniedModal() {
   const voltarBtn = document.getElementById("deniedVoltarBtn");
   if (voltarBtn) voltarBtn.onclick = () => {
     modal.style.display = "none";
-    showPopup("Tentativa de entrar em área restrita registrada.");
+    restrictedAttempts++;
+    saveProgress();
+    showPopup(`Tentativa ${restrictedAttempts}/3 registrada.`);
+
+    if (restrictedAttempts >= 3) {
+      showPunicaoModal();
+    }
+  };
+}
+
+function showPunicaoModal() {
+  const modal = document.getElementById("punicaoModal");
+  if (modal) modal.style.display = "flex";
+  const voltarBtn = document.getElementById("punicaoVoltarBtn");
+  if (voltarBtn) voltarBtn.onclick = () => {
+    modal.style.display = "none";
+    if (xp >= 50) {
+      xp -= 50;
+      showPopup("Punição aplicada: -50 XP");
+      updateUI();
+      saveProgress();
+    } else {
+      showPopup("Punição aplicada, mas XP insuficiente.");
+    }
+    restrictedAttempts = 0; // reseta após punição
+    saveProgress();
   };
 }
 
@@ -310,6 +340,8 @@ document.getElementById("emailSubmitBtn").onclick = () => {
   if (value === "MorningstarLabs2810") {
     document.getElementById("adminAuthDiv").style.display = "flex";
     showPopup("Passagem secreta reconhecida.");
+    restrictedAttempts = 0; // zera se acertou palavra-chave
+    saveProgress();
   } else {
     const emailRegex = /\S+@\S+\.\S+/;
     if (emailRegex.test(value)) {
@@ -319,6 +351,8 @@ document.getElementById("emailSubmitBtn").onclick = () => {
       updateUI();
       saveProgress();
     } else {
+      restrictedAttempts++;
+      saveProgress();
       showDeniedModal();
     }
   }
@@ -334,6 +368,7 @@ document.getElementById("adminSubmitBtn").onclick = () => {
     updateTitle();
     updateUI();
     showPopup("Bem-vindo de volta Arquiteto Morningstar");
+    restrictedAttempts = 0; // zera se entrou como Arquiteto
     saveProgress();
   } else {
     showPopup("Senha incorreta.");
@@ -344,10 +379,8 @@ document.getElementById("adminSubmitBtn").onclick = () => {
 loadProgress();
 applyLanguage(language);
 
-// Força checagem do termo
 showTermoModal();
 
-// Se não tem nome, mostra welcome; senão game com update
 if (!playerName) {
   showScreen("welcome");
 } else {
@@ -356,10 +389,8 @@ if (!playerName) {
   updateTitle();
 }
 
-// Bind termo
 document.querySelectorAll('.term-link, #viewTermBtn').forEach(el => el.onclick = showTermoModal);
 
-// Bind voltar jogo
 document.getElementById("backGameBtn").onclick = () => {
   showScreen("game");
   updateUI();
