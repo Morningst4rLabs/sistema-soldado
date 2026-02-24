@@ -9,7 +9,7 @@
 
 <body class="dark-mode">
 
-<!-- MODAL TERMO (com checkbox no primeiro load) -->
+<!-- MODAL TERMO -->
 <div id="termoModal" class="modal-overlay" style="display: none;">
   <div class="modal-content">
     <h2 id="termoTitle">TERMO DE RESPONSABILIDADE E USO</h2>
@@ -23,12 +23,13 @@
         <li><strong>Aceitação</strong><br>Ao marcar a caixa abaixo e clicar em "Aceitar e Continuar", você confirma que leu, entendeu e aceita integralmente este termo. Se não concordar, não utilize o aplicativo.</li>
       </ol>
     </div>
-    <label class="checkbox-label">
+    <label class="checkbox-label" id="termoCheckboxLabel">
       <input type="checkbox" id="termoCheckbox"> Li e concordo integralmente com o Termo de Responsabilidade.
     </label>
     <div class="modal-buttons">
       <button id="termoRecusarBtn" class="btn-secondary">Recusar</button>
       <button id="termoAceitarBtn" class="btn-primary" disabled>Aceitar e Continuar</button>
+      <button id="termoFecharBtn" class="btn-primary" style="display: none;">Fechar</button>
     </div>
   </div>
 </div>
@@ -125,9 +126,9 @@
     </div>
     <h1 id="playerTitle">SISTEMA SOLDADO</h1>
     <div class="status">
-      <p id="rankLabel">Patente: <span id="rank"></span></p>
-      <p id="levelLabel">Nível: <span id="level"></span></p>
-      <p id="xpLabel">XP: <span id="xp"></span> / <span id="xpNext"></span></p>
+      <p id="rankLabel">Patente: <span id="rank">Soldado</span></p>
+      <p id="levelLabel">Nível: <span id="level">1</span></p>
+      <p id="xpLabel">XP: <span id="xp">0</span> / <span id="xpNext">100</span></p>
       <div class="xp-bar">
         <div class="xp-fill" id="xpFill"></div>
       </div>
