@@ -1,262 +1,154 @@
 /* ======================================
    MORNINGSTAR - CSS REESCRITO DO ZERO
-   Escalável, com variáveis, animações e responsividade
    ====================================== */
 
-/* ================= RESET & BASE ================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body {
-  height: 100%;
-  font-family: 'Playfair Display', serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* ================= VARIÁVEIS (mude tudo aqui) ================= */
-:root {
-  /* Cores principais */
-  --bg-dark: #0a0a0f;
-  --bg-card-dark: #111118;
-  --bg-light: #f8f5e6;
-  --bg-card-light: #fffaf0;
-  --text-gold: #d4af37;
-  --text-gold-dark: #b8860b;
-  --accent-red: #ff0000;
-  --accent-purple: #a855f7;
-  --accent-green: #00ff00;
-  --border-gold: #d4af37;
-  --border-red: #ff0000;
-
-  /* Sombras */
-  --shadow-purple: rgba(168, 85, 247, 0.3);
-  --shadow-red: rgba(255, 0, 0, 0.5);
-  --shadow-gold: rgba(212, 175, 55, 0.4);
-
-  /* Transições */
-  --transition: all 0.3s ease;
-}
-
-/* ================= DARK MODE (padrão) ================= */
 body {
-  background: var(--bg-dark);
-  color: var(--text-gold);
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  background: #0a0a0f;
+  color: #d4af37;
   min-height: 100vh;
-  transition: var(--transition);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* ================= LIGHT MODE ================= */
-body.light-mode {
-  background: var(--bg-light);
-  color: var(--text-gold-dark);
-}
-
-body.light-mode .game-container,
-body.light-mode .modal-content,
-body.light-mode .menu-dropdown {
-  background: var(--bg-card-light);
-  border-color: var(--text-gold-dark);
-  box-shadow: 0 0 25px var(--shadow-gold);
-}
-
-/* ================= TELAS ================= */
 .screen {
   position: fixed;
   inset: 0;
-  background: var(--bg-dark);
+  background: #0a0a0f;
   display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 10;
-  padding: 1.5rem;
+  padding: 20px;
 }
 
-body.light-mode .screen {
-  background: var(--bg-light);
+.flex-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
-/* ================= LOGO & TEXTOS ================= */
 .logo {
   font-family: 'Alegerian', cursive;
-  font-size: clamp(3rem, 12vw, 5rem);
-  color: var(--text-gold);
-  text-shadow: 0 0 20px var(--shadow-gold);
+  font-size: 4rem;
+  color: #d4af37;
+  text-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
   margin-bottom: 1.5rem;
-  text-align: center;
 }
 
-.welcome-text,
-.message {
-  font-size: 1.4rem;
+.welcome-text {
+  font-size: 1.5rem;
   text-align: center;
   max-width: 90%;
-  line-height: 1.5;
-  margin: 1rem 0;
 }
 
-/* ================= BOTÕES ================= */
-button, .logo-btn {
+button {
   background: #1a1a22;
-  border: 1px solid var(--border-gold);
-  color: var(--text-gold);
-  padding: 0.9rem 1.8rem;
-  margin: 0.6rem;
-  border-radius: 10px;
+  border: 1px solid #d4af37;
+  color: #d4af37;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1rem;
-  transition: var(--transition);
+  transition: 0.3s;
+  font-size: 1rem;
 }
 
-button:hover, .logo-btn:hover {
-  background: var(--text-gold);
+button:hover {
+  background: #d4af37;
   color: #111118;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px var(--shadow-gold);
 }
 
-.logo-btn {
-  font-size: clamp(3rem, 15vw, 5rem);
-  background: none;
-  border: none;
-  padding: 0;
-}
-
-/* ================= INPUTS & SELECT ================= */
-input[type="text"],
-input[type="password"],
-select {
-  padding: 0.9rem;
-  margin: 0.8rem 0;
-  border-radius: 10px;
-  border: 1px solid var(--border-gold);
-  background: #1e1e28;
-  color: var(--text-gold);
+input[type="text"], input[type="password"], select {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #d4af37;
+  background: #111118;
+  color: #d4af37;
   width: 90%;
-  max-width: 320px;
-  font-size: 1.1rem;
+  max-width: 300px;
+  font-size: 1rem;
 }
 
-body.light-mode input[type="text"],
-body.light-mode input[type="password"],
-body.light-mode select {
-  background: var(--bg-card-light);
-  color: var(--text-gold-dark);
-  border-color: var(--text-gold-dark);
-}
-
-/* ================= GAME CONTAINER ================= */
 .game-container {
-  background: var(--bg-card-dark);
-  padding: 2rem;
-  border-radius: 16px;
+  background: #111118;
+  padding: 30px;
+  border-radius: 12px;
   width: 90%;
-  max-width: 520px;
+  max-width: 500px;
   text-align: center;
-  box-shadow: 0 0 30px var(--shadow-purple);
+  box-shadow: 0 0 25px rgba(128, 0, 255, 0.3);
 }
 
-/* ================= STATUS & XP BAR ================= */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
 .status p {
-  font-size: 1.3rem;
-  margin: 0.6rem 0;
+  margin: 10px 0;
 }
 
 .xp-bar {
   width: 100%;
-  height: 22px;
-  background: #1e1e28;
-  border-radius: 11px;
+  height: 20px;
+  background: #1a1a22;
+  border-radius: 10px;
   overflow: hidden;
-  margin: 1.2rem 0;
-  border: 1px solid var(--border-gold);
-}
-
-body.light-mode .xp-bar {
-  background: #e0d4b8;
+  margin: 10px 0;
 }
 
 .xp-fill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, var(--accent-purple), var(--text-gold));
-  transition: width 0.6s ease;
+  background: linear-gradient(90deg, #5f00ff, #a855f7);
+  transition: width 0.4s ease;
 }
 
-/* ================= MISSÕES ================= */
 .missions button {
   width: 100%;
-  margin: 0.8rem 0;
-  padding: 1.2rem;
+  margin: 10px 0;
+  padding: 15px;
   font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  transition: var(--transition);
 }
 
-.missions button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* ================= MENU DROPDOWN ================= */
 .menu-dropdown {
   display: none;
   position: absolute;
   top: 60px;
   left: 10px;
-  background: var(--bg-card-dark);
-  min-width: 200px;
-  border: 1px solid var(--border-gold);
-  border-radius: 12px;
-  box-shadow: 0 0 20px var(--shadow-purple);
+  background: #111118;
+  min-width: 180px;
+  border: 1px solid #d4af37;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(128,0,255,0.3);
   z-index: 200;
-  overflow: hidden;
-}
-
-body.light-mode .menu-dropdown {
-  background: var(--bg-card-light);
-  border-color: var(--text-gold-dark);
-  box-shadow: 0 0 20px var(--shadow-gold);
 }
 
 .menu-dropdown button {
   width: 100%;
-  text-align: left;
-  padding: 1rem 1.2rem;
+  padding: 10px;
   border: none;
   background: none;
-  color: var(--text-gold);
-  font-size: 1.1rem;
-  transition: var(--transition);
+  color: #d4af37;
+  text-align: left;
 }
 
-/* ================= DISCLAIMER ================= */
-.disclaimer {
-  font-size: 0.9rem;
-  color: #a0a0a0;
-  margin-top: 2rem;
-  text-align: center;
-}
-
-.term-link {
-  color: var(--text-gold);
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.term-link:hover {
-  color: var(--accent-red);
-}
-
-/* ================= MODAIS ================= */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -268,87 +160,101 @@ body.light-mode .menu-dropdown {
 }
 
 .modal-content {
-  background: var(--bg-card-dark);
-  border: 2px solid var(--border-gold);
-  border-radius: 16px;
+  background: #111118;
+  border: 2px solid #d4af37;
+  border-radius: 12px;
   width: 90%;
-  max-width: 620px;
+  max-width: 600px;
   max-height: 85vh;
   overflow-y: auto;
-  padding: 2rem;
-  box-shadow: 0 0 40px var(--shadow-gold);
-  color: var(--text-gold);
-}
-
-body.light-mode .modal-content {
-  background: var(--bg-card-light);
-  border-color: var(--text-gold-dark);
-  color: var(--text-gold-dark);
+  padding: 25px;
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+  color: #d4af37;
 }
 
 .modal-content h2 {
   text-align: center;
-  color: var(--accent-red);
-  margin-bottom: 1.5rem;
-  font-size: 2rem;
+  color: #ff0000;
+  margin-bottom: 20px;
 }
 
 .modal-body {
-  font-size: 1.05rem;
-  line-height: 1.7;
+  font-size: 0.95em;
+  line-height: 1.6;
 }
 
 .modal-buttons {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  font-size: 1.1rem;
+  color: #d4af37;
+}
+
+.checkbox-label input {
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.disclaimer {
+  font-size: 0.9rem;
+  color: #a0a0a0;
   margin-top: 2rem;
+  text-align: center;
 }
 
-/* ================= ANIMAÇÕES ================= */
-@keyframes shake {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  10% { transform: translate(-1px, -2px) rotate(-1deg); }
-  20% { transform: translate(-3px, 0px) rotate(1deg); }
-  30% { transform: translate(3px, 2px) rotate(0deg); }
-  40% { transform: translate(1px, -1px) rotate(1deg); }
-  50% { transform: translate(-1px, 2px) rotate(-1deg); }
-  60% { transform: translate(-3px, 1px) rotate(0deg); }
-  70% { transform: translate(3px, 1px) rotate(-1deg); }
-  80% { transform: translate(-1px, -1px) rotate(1deg); }
-  90% { transform: translate(1px, 2px) rotate(0deg); }
-  100% { transform: translate(1px, -2px) rotate(-1deg); }
+.term-link {
+  color: #d4af37;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
-.denied-content {
-  animation: shake 0.6s;
-  border-color: var(--accent-red);
-  box-shadow: 0 0 50px var(--shadow-red);
+.term-link:hover {
+  color: #ff0000;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.04); }
-  100% { transform: scale(1); }
+/* LIGHT MODE */
+body.light-mode {
+  background: #f8f5e6;
+  color: #b8860b;
 }
 
-.saude-content {
-  animation: pulse 1.8s infinite;
-  border-color: var(--accent-green);
-  box-shadow: 0 0 50px rgba(0, 255, 0, 0.4);
+body.light-mode .game-container,
+body.light-mode .modal-content {
+  background: #fffaf0;
+  border-color: #b8860b;
+  color: #b8860b;
 }
 
-.punicao-content {
-  border-color: var(--accent-red);
-  box-shadow: 0 0 50px var(--shadow-red);
+body.light-mode button {
+  background: #fffaf0;
+  border-color: #b8860b;
+  color: #b8860b;
 }
 
-/* ================= RESPONSIVO ================= */
-@media (max-width: 600px) {
-  .logo { font-size: clamp(2.8rem, 10vw, 4rem); }
-  .logo-btn { font-size: clamp(2.8rem, 12vw, 4rem); }
-  .game-container { padding: 1.5rem; }
-  .missions button { padding: 1rem; font-size: 1.1rem; }
-  input, select, button { width: 100%; max-width: none; }
-  .modal-content { padding: 1.5rem; }
+body.light-mode button:hover {
+  background: #b8860b;
+  color: #fffaf0;
+}
+
+body.light-mode input, body.light-mode select {
+  background: #fffaf0;
+  border-color: #b8860b;
+  color: #b8860b;
+}
+
+body.light-mode .xp-bar {
+  background: #e0d4b8;
+}
+
+body.light-mode .xp-fill {
+  background: linear-gradient(90deg, #b8860b, #d4af37);
 }
