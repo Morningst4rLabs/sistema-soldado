@@ -87,7 +87,7 @@ function applyLanguage(lang) {
   });
 
   updateTitle();
-  updateUI(); // atualiza patente/nível/XP com idioma novo
+  updateUI();
 }
 
 function loadProgress() {
@@ -179,10 +179,9 @@ function showTermoModal() {
   const recusarBtn = document.getElementById("termoRecusarBtn");
   const fecharBtn = document.getElementById("termoFecharBtn");
 
-  // Reset visibilidade
+  // Garante que os botões existem antes de manipular
   if (aceito) {
-    // Modo leitura
-    if (checkbox) checkbox.style.display = "none";
+    if (checkbox) checkbox.parentElement.style.display = "none";
     if (aceitarBtn) aceitarBtn.style.display = "none";
     if (recusarBtn) recusarBtn.style.display = "none";
     if (fecharBtn) {
@@ -190,9 +189,8 @@ function showTermoModal() {
       fecharBtn.onclick = () => modal.style.display = "none";
     }
   } else {
-    // Primeiro acesso: exige concordância
     if (checkbox) {
-      checkbox.style.display = "inline-block";
+      checkbox.parentElement.style.display = "flex";
       checkbox.checked = false;
       checkbox.onchange = () => {
         if (aceitarBtn) aceitarBtn.disabled = !checkbox.checked;
@@ -396,11 +394,10 @@ applyLanguage(language);
 
 // Força atualização da UI após carregar tela de jogo
 setTimeout(() => {
-  if (screens.game && screens.game.style.display === "flex") {
-    updateUI();
-    updateTitle();
-  }
-}, 100);
+  showScreen("game");
+  updateUI();
+  updateTitle();
+}, 300); // delay pequeno para garantir DOM
 
 showTermoModal();
 
