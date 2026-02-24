@@ -383,20 +383,67 @@ document.getElementById("adminSubmitBtn").onclick = () => {
 loadProgress();
 applyLanguage(language);
 
-showTermoModal();
+function showTermoModal() {
+  const aceito = localStorage.getItem(TERMO_KEY) === "true";
+  const modal = document.getElementById("termoModal");
+  if (!modal) return; // evita erro se modal não existir
 
-if (!playerName) {
-  showScreen("welcome");
-} else {
-  showScreen("game");
-  updateUI();
-  updateTitle();
+  modal.style.display = "flex";
+
+  // Elementos do modal
+  const checkbox = document.getElementById("termoCheckbox");
+  const aceitarBtn = document.getElementById("termoAceitarBtn");
+  const recusarBtn = document.getElementById("termoRecusarBtn");
+  const fecharBtn = document.getElementById("termoFecharBtn");
+
+  // Reset visibilidade inicial
+  if (aceito) {
+    // Já aceito: modo leitura (só fechar)
+    if (checkbox) checkbox.style.display = "none";
+    if (aceitarBtn) aceitarBtn.style.display = "none";
+    if (recusarBtn) recusarBtn.style.display = "none";
+    if (fecharBtn) fecharBtn.style.display = "block";
+  } else {
+    // Primeiro acesso: exige concordância
+    if (checkbox) checkbox.style.display = "inline-block";
+    if (aceitarBtn) aceitarBtn.style.display = "block";
+    if (recusarBtn) recusarBtn.style.display = "block";
+    if (fecharBtn) fecharBtn.style.display = "none";
+
+    // Checkbox controla botão aceitar
+    if (aceitarBtn) aceitarBtn.disabled = true;
+
+    if (checkbox) {
+      checkbox.checked = false;
+      checkbox.onchange = () => {
+        if (aceitarBtn) aceitarBtn.disabled = !checkbox.checked;
+      };
+    }
+
+    if (aceitarBtn) {
+      aceitarBtn.onclick = () => {
+        localStorage.setItem(TERMO_KEY, "true");
+        modal.style.display = "none";
+        showPopup("Termos aceitos. Agora você é parte da Legião.");
+        if (!playerName) showScreen("welcome");
+      };
+    }
+
+    if (recusarBtn) {
+      recusarBtn.onclick = () => {
+        modal.style.display = "none";
+        showPopup("Você recusou os termos. Acesso negado até aceitar.");
+        // Pode resetar ou ficar na welcome
+        localStorage.clear();
+        showScreen("welcome");
+      };
+    }
+  }
+
+  // Sempre tem botão fechar no modo leitura
+  if (fecharBtn) {
+    fecharBtn.onclick = () => {
+      modal.style.display = "none";
+    };
+  }
 }
-
-document.querySelectorAll('.term-link, #viewTermBtn').forEach(el => el.onclick = showTermoModal);
-
-document.getElementById("backGameBtn").onclick = () => {
-  showScreen("game");
-  updateUI();
-  updateTitle();
-};
