@@ -179,7 +179,6 @@ function showTermoModal() {
   const recusarBtn = document.getElementById("termoRecusarBtn");
   const fecharBtn = document.getElementById("termoFecharBtn");
 
-  // Garante que os botões existem antes de manipular
   if (aceito) {
     if (checkbox) checkbox.parentElement.style.display = "none";
     if (aceitarBtn) aceitarBtn.style.display = "none";
@@ -392,22 +391,16 @@ document.getElementById("adminSubmitBtn").onclick = () => {
 loadProgress();
 applyLanguage(language);
 
-// Força atualização da UI após carregar tela de jogo
 setTimeout(() => {
-  showScreen("game");
-  updateUI();
-  updateTitle();
-}, 300); // delay pequeno para garantir DOM
-
-showTermoModal();
-
-if (!playerName) {
-  showScreen("welcome");
-} else {
-  showScreen("game");
-  updateUI();
-  updateTitle();
-}
+  showTermoModal();
+  if (!playerName) {
+    showScreen("welcome");
+  } else {
+    showScreen("game");
+    updateUI();
+    updateTitle();
+  }
+}, 100);
 
 document.querySelectorAll('.term-link, #viewTermBtn').forEach(el => el.onclick = showTermoModal);
 
