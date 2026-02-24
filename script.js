@@ -13,7 +13,6 @@ const translations = {
     termoTitle: "TERMO DE RESPONSABILIDADE E USO",
     deniedTitle: "ACESSO NEGADO",
     saudeTitle: "ORDENS DO ARQUITETO",
-    punicaoTitle: "INSUBORDINAÇÃO DETECTADA",
     settingsTitle: "Configurações",
     themeLabel: "Tema",
     languageLabel: "Idioma",
@@ -39,7 +38,6 @@ const translations = {
     termoTitle: "TERMS OF RESPONSIBILITY AND USE",
     deniedTitle: "ACCESS DENIED",
     saudeTitle: "ARCHITECT'S ORDERS",
-    punicaoTitle: "INSUBORDINATION DETECTED",
     settingsTitle: "Settings",
     themeLabel: "Theme",
     languageLabel: "Language",
@@ -74,7 +72,6 @@ let language = "pt";
 let dailyXp = 0;
 let lastDay = new Date().toDateString();
 let lastTaskTime = 0;
-let restrictedAttempts = 0;
 
 // --------- FUNÇÕES ----------
 function applyLanguage(lang) {
@@ -88,6 +85,7 @@ function applyLanguage(lang) {
   });
 
   updateTitle();
+  updateUI();
 }
 
 function loadProgress() {
@@ -105,7 +103,6 @@ function loadProgress() {
       language = data.language || "pt";
       dailyXp = data.dailyXp || 0;
       lastDay = data.lastDay || new Date().toDateString();
-      restrictedAttempts = data.restrictedAttempts || 0;
 
       applyLanguage(language);
     } catch (e) {
@@ -129,8 +126,7 @@ function saveProgress() {
     isArchitect,
     language,
     dailyXp,
-    lastDay,
-    restrictedAttempts
+    lastDay
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
@@ -170,10 +166,48 @@ function showScreen(screenName) {
 }
 
 function showTermoModal() {
+  const aceito = localStorage.getItem(TERMO_KEY) === "true";
   const modal = document.getElementById("termoModal");
-  if (modal) modal.style.display = "flex";
-  const fecharBtn = document.getElementById("termoFecharBtn");
-  if (fecharBtn) fecharBtn.onclick = () => modal.style.display = "none";
+  if (modal) {
+    modal.style.display = "flex";
+    const checkbox = document.getElementById("termoCheckbox");
+    const aceitarBtn = document.getElementById("termoAceitarBtn");
+    const recusarBtn = document.getElementById("termoRecusarBtn");
+    const fecharBtn = document.getElementById("termoFecharBtn");
+
+    if (aceito) {
+      // Já aceito: só leitura
+      checkbox.style.display = "none";
+      aceitarBtn.style.display = "none";
+      recusarBtn.style.display = "none";
+      fecharBtn.style.display = "block";
+      fecharBtn.onclick = () => modal.style.display = "none";
+    } else {
+      // Primeiro load: exige checkbox
+      checkbox.style.display = "inline";
+      aceitarBtn.style.display = "block";
+      recusarBtn.style.display = "block";
+      fecharBtn.style.display = "none";
+      aceitarBtn.disabled = true;
+
+      checkbox.onchange = () => {
+        aceitarBtn.disabled = !checkbox.checked;
+      };
+
+      aceitarBtn.onclick = () => {
+        localStorage.setItem(TERMO_KEY, "true");
+        modal.style.display = "none";
+        showPopup("Termos aceitos. Bem-vindo à Legião.");
+        showScreen("welcome");
+      };
+
+      recusarBtn.onclick = () => {
+        modal.style.display = "none";
+        showPopup("Você recusou os termos. Acesso negado até aceitar.");
+        showScreen("welcome");
+      };
+    }
+  }
 }
 
 function showDeniedModal() {
@@ -182,32 +216,7 @@ function showDeniedModal() {
   const voltarBtn = document.getElementById("deniedVoltarBtn");
   if (voltarBtn) voltarBtn.onclick = () => {
     modal.style.display = "none";
-    restrictedAttempts++;
-    saveProgress();
-    showPopup(`Tentativa ${restrictedAttempts}/3 registrada.`);
-
-    if (restrictedAttempts >= 3) {
-      showPunicaoModal();
-    }
-  };
-}
-
-function showPunicaoModal() {
-  const modal = document.getElementById("punicaoModal");
-  if (modal) modal.style.display = "flex";
-  const voltarBtn = document.getElementById("punicaoVoltarBtn");
-  if (voltarBtn) voltarBtn.onclick = () => {
-    modal.style.display = "none";
-    if (xp >= 50) {
-      xp -= 50;
-      showPopup("Punição aplicada: -50 XP");
-      updateUI();
-      saveProgress();
-    } else {
-      showPopup("Punição aplicada, mas XP insuficiente.");
-    }
-    restrictedAttempts = 0; // reseta após punição
-    saveProgress();
+    showPopup("Tentativa de entrar em área restrita registrada.");
   };
 }
 
@@ -340,8 +349,6 @@ document.getElementById("emailSubmitBtn").onclick = () => {
   if (value === "MorningstarLabs2810") {
     document.getElementById("adminAuthDiv").style.display = "flex";
     showPopup("Passagem secreta reconhecida.");
-    restrictedAttempts = 0; // zera se acertou palavra-chave
-    saveProgress();
   } else {
     const emailRegex = /\S+@\S+\.\S+/;
     if (emailRegex.test(value)) {
@@ -351,8 +358,6 @@ document.getElementById("emailSubmitBtn").onclick = () => {
       updateUI();
       saveProgress();
     } else {
-      restrictedAttempts++;
-      saveProgress();
       showDeniedModal();
     }
   }
@@ -368,7 +373,6 @@ document.getElementById("adminSubmitBtn").onclick = () => {
     updateTitle();
     updateUI();
     showPopup("Bem-vindo de volta Arquiteto Morningstar");
-    restrictedAttempts = 0; // zera se entrou como Arquiteto
     saveProgress();
   } else {
     showPopup("Senha incorreta.");
