@@ -150,6 +150,7 @@
 <div id="settingsScreen" class="screen flex-center">
   <div class="game-container">
     <h2 id="settingsTitle">Configurações</h2>
+
     <div class="settings-section">
       <h3 id="themeLabel">Tema</h3>
       <div class="theme-toggle">
@@ -157,6 +158,7 @@
         <span id="settingsDarkModeBtn">🌙 Modo Escuro</span>
       </div>
     </div>
+
     <div class="settings-section">
       <h3 id="languageLabel">Idioma</h3>
       <select id="languageSelect">
@@ -164,13 +166,15 @@
         <option value="en">English (EN)</option>
       </select>
     </div>
+
     <div class="settings-section">
       <h3 id="otherOptionsLabel">Outras Opções</h3>
       <button onclick="resetProgress()" id="resetBtn">Resetar Progresso</button>
       <button onclick="showTermoModal()" id="viewTermBtn">Ver Termo de Responsabilidade</button>
       <button onclick="showPopup('Sobre o Arquiteto: Criado por Pietro, Morningstar Labs. Versão 1.0 - 2026.')" id="aboutBtn">Sobre o Arquiteto</button>
     </div>
-    <button id="backGameBtn">Voltar ao Jogo</button>
+
+    <button onclick="showScreen('game')" id="backGameBtn">Voltar ao Jogo</button>
   </div>
 </div>
 
