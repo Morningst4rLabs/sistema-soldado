@@ -1,83 +1,128 @@
-* { margin:0; padding:0; box-sizing:border-box; }
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
 
 body {
+  margin: 0;
   font-family: 'Playfair Display', serif;
   background: #0a0a0f;
   color: #d4af37;
-  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .screen {
-  position: fixed;
-  inset: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
   background: #0a0a0f;
   display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  z-index: 100;
   padding: 20px;
+  box-sizing: border-box;
 }
 
-.flex-center { display:flex; flex-direction:column; justify-content:center; align-items:center; width:100%; height:100%; }
+.flex-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-.logo { font-family: 'Alegerian', cursive; font-size: 4.5rem; color: #d4af37; text-shadow: 0 0 20px #d4af37; margin-bottom: 1.5rem; }
+.logo {
+  font-family: 'Alegerian', serif;
+  font-size: 48px;
+  color: #d4af37;
+  margin-bottom: 20px;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+}
+
+.logo-btn {
+  font-size: 50px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logo-btn:hover {
+  transform: scale(1.2);
+}
+
+input[type="text"], input[type="password"], select {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #d4af37;
+  background: #111118;
+  color: #d4af37;
+  width: 250px;
+  font-size: 16px;
+}
 
 button {
   background: #1a1a22;
   border: 1px solid #d4af37;
   color: #d4af37;
-  padding: 12px 20px;
-  margin: 8px;
-  border-radius: 10px;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1rem;
   transition: 0.3s;
+  font-size: 16px;
 }
 
-button:hover { background: #d4af37; color: #111; transform: scale(1.05); }
-
-input, select {
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 10px;
-  border: 1px solid #d4af37;
-  background: #111118;
-  color: #d4af37;
-  width: 90%;
-  max-width: 320px;
-  font-size: 1.1rem;
+button:hover {
+  background: #d4af37;
+  color: #111118;
 }
 
 .game-container {
   background: #111118;
   padding: 30px;
-  border-radius: 16px;
+  border-radius: 12px;
   width: 90%;
-  max-width: 520px;
+  max-width: 500px;
   text-align: center;
-  box-shadow: 0 0 30px rgba(168,85,247,0.3);
+  box-shadow: 0 0 25px rgba(128, 0, 255, 0.3);
 }
 
-.status p { margin: 8px 0; font-size: 1.3rem; }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#playerTitle {
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+.status p {
+  margin: 5px 0;
+}
 
 .xp-bar {
   width: 100%;
-  height: 22px;
-  background: #1e1e28;
-  border-radius: 11px;
+  height: 20px;
+  background: #1a1a22;
+  border-radius: 10px;
   overflow: hidden;
-  margin: 15px 0;
+  margin: 10px 0 20px 0;
 }
 
 .xp-fill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #a855f7, #d4af37);
-  transition: width 0.6s ease;
+  background: linear-gradient(90deg, #5f00ff, #a855f7);
+  transition: width 0.4s ease;
 }
-
-.missions button { width: 100%; margin: 12px 0; padding: 16px; font-size: 1.25rem; }
 
 .menu-dropdown {
   display: none;
@@ -85,18 +130,82 @@ input, select {
   top: 60px;
   left: 10px;
   background: #111118;
-  min-width: 200px;
+  min-width: 180px;
   border: 1px solid #d4af37;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(168,85,247,0.3);
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(128,0,255,0.3);
   z-index: 200;
+}
+
+.menu-dropdown button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: none;
+  color: #d4af37;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.menu-dropdown button:hover {
+  background: #d4af37;
+  color: #111118;
+}
+
+.message {
+  margin-top: 15px;
+  color: #a855f7;
+  font-weight: bold;
+}
+
+.disclaimer {
+  font-size: 12px;
+  color: #a0a0a0;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.term-link {
+  color: #d4af37;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.term-link:hover {
+  color: #ff0000;
+}
+
+.theme-toggle span {
+  font-size: 24px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.theme-toggle span:hover {
+  transform: scale(1.2);
+}
+
+@media (max-width: 600px) {
+  .game-container, input[type="text"], select {
+    width: 90%;
+  }
+  .logo {
+    font-size: 36px;
+  }
+  .logo-btn {
+    font-size: 40px;
+  }
 }
 
 .modal-overlay {
   position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.9);
-  display: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
@@ -105,30 +214,102 @@ input, select {
 .modal-content {
   background: #111118;
   border: 2px solid #d4af37;
-  border-radius: 16px;
-  width: 92%;
-  max-width: 620px;
-  max-height: 88vh;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 85vh;
   overflow-y: auto;
   padding: 25px;
-  box-shadow: 0 0 40px rgba(212,175,55,0.5);
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+  text-align: left;
+  color: #d4af37;
 }
 
-.modal-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
+.modal-content h2 {
+  text-align: center;
+  color: #ff0000;
+  margin-bottom: 20px;
+}
 
-.checkbox-label { display: flex; align-items: center; margin: 20px 0; font-size: 1.15rem; cursor: pointer; }
+.modal-body {
+  font-size: 0.95em;
+  line-height: 1.6;
+}
 
-.checkbox-label input { margin-right: 12px; width: 22px; height: 22px; accent-color: #d4af37; }
+.modal-body ol {
+  padding-left: 20px;
+}
 
-.disclaimer { font-size: 0.9rem; color: #888; margin-top: 25px; text-align: center; }
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+}
 
-.term-link { color: #d4af37; text-decoration: underline; cursor: pointer; }
+.btn-primary {
+  background: #d4af37;
+  color: #111118;
+  font-weight: bold;
+}
 
-.term-link:hover { color: #ff0000; }
+.btn-secondary {
+  background: #1a1a22;
+  border: 1px solid #888;
+}
 
-/* Light Mode */
-body.light-mode { background: #f8f5e6; color: #b8860b; }
-body.light-mode .game-container,
-body.light-mode .modal-content { background: #fffaf0; border-color: #b8860b; color: #b8860b; }
-body.light-mode button { background: #fffaf0; border-color: #b8860b; color: #b8860b; }
-body.light-mode button:hover { background: #b8860b; color: #fffaf0; }
+.light-mode {
+  background: #f8f5e6;
+  color: #b8860b;
+}
+
+.light-mode .game-container {
+  background: #fffaf0;
+  box-shadow: 0 0 25px rgba(184, 134, 11, 0.3);
+}
+
+.light-mode button {
+  background: #fffaf0;
+  border: 1px solid #b8860b;
+  color: #b8860b;
+}
+
+.light-mode button:hover {
+  background: #b8860b;
+  color: #fffaf0;
+}
+
+.light-mode input[type="text"], .light-mode input[type="password"], .light-mode select {
+  background: #fffaf0;
+  border: 1px solid #b8860b;
+  color: #b8860b;
+}
+
+.light-mode .xp-bar {
+  background: #e0d4b8;
+}
+
+.light-mode .xp-fill {
+  background: linear-gradient(90deg, #b8860b, #d4af37);
+}
+
+.light-mode .menu-dropdown {
+  background: #fffaf0;
+  border: 1px solid #b8860b;
+}
+
+.light-mode .disclaimer {
+  color: #8b6f47;
+}
+
+.internal-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #111118;
+  color: #d4af37;
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(128,0,255,0.4);
+  display: none;
+  z-index: 999;
+  font-weight: bold;
+}
