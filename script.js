@@ -1,5 +1,5 @@
 // ======================================
-// MORNINGSTAR - FASE NECROMANCER
+// MORNINGSTAR - FASE NECROMANCER FINAL
 // ======================================
 
 const STORAGE_KEY = "morningstarProgress_v1";
@@ -232,6 +232,8 @@ function updateUI() {
   if (levelEl) levelEl.innerText = level;
   if (rankEl) rankEl.innerText = rank;
   if (xpFillEl && xpNext > 0) xpFillEl.style.width = (xp / xpNext * 100) + "%";
+
+  console.log("updateUI executado - Patente:", rank, "Nível:", level, "XP:", xp, "XPNext:", xpNext);
 }
 
 function updateTitle() {
@@ -315,20 +317,28 @@ document.getElementById("adminSubmitBtn").onclick = () => {
   }
 };
 
-// Inicialização
+// Inicialização com observador para garantir que os elementos existem
 loadProgress();
 applyLanguage(language);
 
-setTimeout(() => {
-  showTermoModal();
-  if (!playerName) {
-    showScreen("welcome");
-  } else {
-    showScreen("game");
-    updateUI();
-    updateTitle();
-  }
-}, 200);
+showTermoModal();
+
+if (!playerName) {
+  showScreen("welcome");
+} else {
+  showScreen("game");
+
+  // MutationObserver para esperar os elementos da status aparecerem
+  const observer = new MutationObserver(() => {
+    if (document.getElementById("rank")) {
+      updateUI();
+      updateTitle();
+      observer.disconnect(); // para quando encontrar
+    }
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+}
 
 document.querySelectorAll('.term-link, #viewTermBtn').forEach(el => el.onclick = showTermoModal);
 
