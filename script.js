@@ -317,33 +317,34 @@ document.getElementById("adminSubmitBtn").onclick = () => {
   }
 };
 
-// Inicialização com observador para garantir que os elementos existem
+// Inicialização com garantia de update após renderização
 loadProgress();
 applyLanguage(language);
 
-showTermoModal();
+setTimeout(() => {
+  showTermoModal();
 
-if (!playerName) {
-  showScreen("welcome");
-} else {
-  showScreen("game");
+  if (!playerName) {
+    showScreen("welcome");
+  } else {
+    showScreen("game");
 
-  // MutationObserver para esperar os elementos da status aparecerem
-  const observer = new MutationObserver(() => {
-    if (document.getElementById("rank")) {
-      updateUI();
-      updateTitle();
-      observer.disconnect(); // para quando encontrar
-    }
-  });
-
-  observer.observe(document.body, { childList: true, subtree: true });
-}
+    // Força update após 500ms + requestAnimationFrame
+    setTimeout(() => {
+      requestAnimationFrame(() => {
+        updateUI();
+        updateTitle();
+      });
+    }, 500);
+  }
+}, 200);
 
 document.querySelectorAll('.term-link, #viewTermBtn').forEach(el => el.onclick = showTermoModal);
 
 document.getElementById("backGameBtn").onclick = () => {
   showScreen("game");
-  updateUI();
-  updateTitle();
+  setTimeout(() => {
+    updateUI();
+    updateTitle();
+  }, 300);
 };
